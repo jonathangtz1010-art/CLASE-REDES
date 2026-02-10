@@ -1,2 +1,2 @@
 # CLASE-REDES
-Practicas completasdas
+Practicas completadas
