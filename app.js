@@ -137,6 +137,8 @@ function clasificarSensor(key, value) {
       return { nivel: "normal", led: "led-green", pill: "pill-normal", badge: "Segura", texto: "Distancia segura" };
     }
   }
+
+  return { nivel: "normal", led: "led-green", pill: "pill-normal", badge: "Normal", texto: "Estado estable" };
 }
 
 function actualizarResumen() {
