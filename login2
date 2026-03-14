@@ -18,8 +18,8 @@
         <p class="eyebrow">Sistema profesional de monitoreo</p>
         <h1>SmartSense Control Center</h1>
         <p class="intro-text">
-          Plataforma web con acceso controlado para monitoreo de sensores simulados
-          e indicadores virtuales tipo LED.
+          Plataforma web con acceso seguro para el monitoreo de sensores simulados
+          e indicadores virtuales tipo LED con una interfaz moderna y profesional.
         </p>
 
         <div class="feature-list">
@@ -48,11 +48,11 @@
           </div>
           <div class="mini-box">
             <h3>LED</h3>
-            <p>Visualización</p>
+            <p>Estados visuales</p>
           </div>
           <div class="mini-box">
-            <h3>24/7</h3>
-            <p>Simulación</p>
+            <h3>100%</h3>
+            <p>Interfaz responsiva</p>
           </div>
         </div>
       </div>
