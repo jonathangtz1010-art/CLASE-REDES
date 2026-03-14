@@ -1,0 +1,237 @@
+/* =========================
+   CREDENCIALES DEL LOGIN
+========================= */
+const usuarioCorrecto = "admin";
+const contrasenaCorrecta = "12345";
+
+/* =========================
+   ELEMENTOS DEL LOGIN
+========================= */
+const loginSection = document.getElementById("loginSection");
+const dashboardSection = document.getElementById("dashboardSection");
+const usuarioInput = document.getElementById("usuario");
+const contrasenaInput = document.getElementById("contrasena");
+const btnLogin = document.getElementById("btnLogin");
+const mensajeLogin = document.getElementById("mensajeLogin");
+const btnLogout = document.getElementById("btnLogout");
+
+/* =========================
+   ELEMENTOS DE HUMEDAD
+========================= */
+const humedadRange = document.getElementById("humedadRange");
+const humedadInput = document.getElementById("humedadInput");
+const humedadValor = document.getElementById("humedadValor");
+const ledHumedad = document.getElementById("ledHumedad");
+const estadoHumedad = document.getElementById("estadoHumedad");
+
+/* =========================
+   ELEMENTOS DE TEMPERATURA
+========================= */
+const temperaturaRange = document.getElementById("temperaturaRange");
+const temperaturaInput = document.getElementById("temperaturaInput");
+const temperaturaValor = document.getElementById("temperaturaValor");
+const ledTemperatura = document.getElementById("ledTemperatura");
+const estadoTemperatura = document.getElementById("estadoTemperatura");
+
+/* =========================
+   BOTONES Y RESUMEN
+========================= */
+const btnAleatorio = document.getElementById("btnAleatorio");
+const btnReset = document.getElementById("btnReset");
+const horaActual = document.getElementById("horaActual");
+const estadoGeneral = document.getElementById("estadoGeneral");
+const descripcionGeneral = document.getElementById("descripcionGeneral");
+
+/* =========================
+   FUNCIÓN LOGIN
+========================= */
+btnLogin.addEventListener("click", function () {
+  const usuario = usuarioInput.value.trim();
+  const contrasena = contrasenaInput.value.trim();
+
+  if (usuario === usuarioCorrecto && contrasena === contrasenaCorrecta) {
+    mensajeLogin.textContent = "Acceso correcto. Bienvenido al sistema.";
+    mensajeLogin.style.color = "#22c55e";
+
+    loginSection.classList.remove("active");
+    dashboardSection.classList.add("active");
+
+    actualizarTodo();
+  } else {
+    mensajeLogin.textContent = "Usuario o contraseña incorrectos.";
+    mensajeLogin.style.color = "#ef4444";
+  }
+});
+
+/* =========================
+   CERRAR SESIÓN
+========================= */
+btnLogout.addEventListener("click", function () {
+  dashboardSection.classList.remove("active");
+  loginSection.classList.add("active");
+
+  usuarioInput.value = "";
+  contrasenaInput.value = "";
+  mensajeLogin.textContent = "";
+});
+
+/* =========================
+   SINCRONIZAR HUMEDAD
+========================= */
+humedadRange.addEventListener("input", function () {
+  humedadInput.value = humedadRange.value;
+  actualizarTodo();
+});
+
+humedadInput.addEventListener("input", function () {
+  if (humedadInput.value !== "") {
+    humedadRange.value = humedadInput.value;
+    actualizarTodo();
+  }
+});
+
+/* =========================
+   SINCRONIZAR TEMPERATURA
+========================= */
+temperaturaRange.addEventListener("input", function () {
+  temperaturaInput.value = temperaturaRange.value;
+  actualizarTodo();
+});
+
+temperaturaInput.addEventListener("input", function () {
+  if (temperaturaInput.value !== "") {
+    temperaturaRange.value = temperaturaInput.value;
+    actualizarTodo();
+  }
+});
+
+/* =========================
+   BOTÓN ALEATORIO
+========================= */
+btnAleatorio.addEventListener("click", function () {
+  const humedadRandom = Math.floor(Math.random() * 101);
+  const temperaturaRandom = Math.floor(Math.random() * 51);
+
+  humedadRange.value = humedadRandom;
+  humedadInput.value = humedadRandom;
+
+  temperaturaRange.value = temperaturaRandom;
+  temperaturaInput.value = temperaturaRandom;
+
+  actualizarTodo();
+});
+
+/* =========================
+   BOTÓN RESET
+========================= */
+btnReset.addEventListener("click", function () {
+  humedadRange.value = 45;
+  humedadInput.value = 45;
+
+  temperaturaRange.value = 24;
+  temperaturaInput.value = 24;
+
+  actualizarTodo();
+});
+
+/* =========================
+   ACTUALIZAR HORA
+========================= */
+function actualizarHora() {
+  const ahora = new Date();
+  horaActual.textContent = ahora.toLocaleTimeString();
+}
+
+/* =========================
+   LIMPIAR CLASES LED
+========================= */
+function limpiarLed(led) {
+  led.classList.remove("led-green", "led-yellow", "led-red", "led-blue", "led-off");
+}
+
+/* =========================
+   LÓGICA DE HUMEDAD
+   <= 8 rojo
+   9 - 20 amarillo
+   > 20 verde
+========================= */
+function actualizarHumedad() {
+  const humedad = parseInt(humedadRange.value);
+
+  humedadValor.textContent = humedad;
+
+  limpiarLed(ledHumedad);
+
+  if (humedad <= 8) {
+    ledHumedad.classList.add("led-red");
+    estadoHumedad.textContent = "Estado: Crítico (humedad muy baja)";
+  } else if (humedad <= 20) {
+    ledHumedad.classList.add("led-yellow");
+    estadoHumedad.textContent = "Estado: Advertencia (humedad baja)";
+  } else {
+    ledHumedad.classList.add("led-green");
+    estadoHumedad.textContent = "Estado: Estable";
+  }
+}
+
+/* =========================
+   LÓGICA DE TEMPERATURA
+   < 18 azul
+   18 - 28 verde
+   > 28 rojo
+========================= */
+function actualizarTemperatura() {
+  const temperatura = parseInt(temperaturaRange.value);
+
+  temperaturaValor.textContent = temperatura;
+
+  limpiarLed(ledTemperatura);
+
+  if (temperatura < 18) {
+    ledTemperatura.classList.add("led-blue");
+    estadoTemperatura.textContent = "Estado: Baja temperatura";
+  } else if (temperatura <= 28) {
+    ledTemperatura.classList.add("led-green");
+    estadoTemperatura.textContent = "Estado: Normal";
+  } else {
+    ledTemperatura.classList.add("led-red");
+    estadoTemperatura.textContent = "Estado: Alta temperatura";
+  }
+}
+
+/* =========================
+   ESTADO GENERAL DEL SISTEMA
+========================= */
+function actualizarEstadoGeneral() {
+  const humedad = parseInt(humedadRange.value);
+  const temperatura = parseInt(temperaturaRange.value);
+
+  if (humedad <= 8 || temperatura > 28) {
+    estadoGeneral.textContent = "Alerta del sistema";
+    descripcionGeneral.textContent =
+      "Se detectó una condición crítica en uno o más sensores. Es necesario revisar los valores mostrados.";
+  } else if ((humedad > 8 && humedad <= 20) || temperatura < 18) {
+    estadoGeneral.textContent = "Sistema en advertencia";
+    descripcionGeneral.textContent =
+      "Los sensores muestran una condición intermedia. El sistema sigue operando, pero requiere atención.";
+  } else {
+    estadoGeneral.textContent = "Operación normal";
+    descripcionGeneral.textContent =
+      "Los sensores se encuentran en valores adecuados y los indicadores LED muestran un estado estable.";
+  }
+}
+
+/* =========================
+   ACTUALIZAR TODO
+========================= */
+function actualizarTodo() {
+  actualizarHumedad();
+  actualizarTemperatura();
+  actualizarEstadoGeneral();
+  actualizarHora();
+}
+
+/* =========================
+   RELOJ AUTOMÁTICO
+========================= */
+setInterval(actualizarHora, 1000);
