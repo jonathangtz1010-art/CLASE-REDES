@@ -1,0 +1,35 @@
+import socket
+import json
+import random
+import time
+
+HOST = "0.0.0.0"
+PORT = 5050
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((HOST, PORT))
+server.listen(1)
+
+print(f"Servidor TCP escuchando en {HOST}:{PORT}")
+
+while True:
+    conn, addr = server.accept()
+    print("Cliente conectado:", addr)
+
+    try:
+        while True:
+            datos = {
+                "humedad": random.randint(0, 100),
+                "temperatura": random.randint(0, 50),
+                "luz": random.randint(0, 1000),
+                "nivel": random.randint(0, 100),
+                "proximidad": random.randint(0, 200)
+            }
+
+            mensaje = json.dumps(datos) + "\n"
+            conn.sendall(mensaje.encode("utf-8"))
+            time.sleep(1)
+
+    except Exception as e:
+        print("Cliente desconectado:", e)
+        conn.close()
