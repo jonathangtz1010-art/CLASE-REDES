@@ -59,7 +59,7 @@
     </section>
 
     <section class="login-right">
-      <form method="POST" class="glass-card login-card">
+      <form method="POST" action="/" class="glass-card login-card">
         <div class="brand-row">
           <div class="brand-logo">SS</div>
           <div>
