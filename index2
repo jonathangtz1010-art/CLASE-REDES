@@ -3,95 +3,279 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartSense | Login</title>
+  <title>SmartSense | Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="login-page">
+<body class="dashboard-page">
 
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
   <div class="bg-grid"></div>
 
-  <main class="login-layout">
-    <section class="login-left">
-      <div class="glass-card intro-card">
-        <p class="eyebrow">Sistema profesional de monitoreo</p>
-        <h1>SmartSense Control Center</h1>
-        <p class="intro-text">
-          Plataforma web con acceso seguro para el monitoreo de sensores simulados
-          e indicadores virtuales tipo LED con una interfaz moderna y profesional.
-        </p>
-
-        <div class="feature-list">
-          <div class="feature-item">
-            <span class="mini-dot blue"></span>
-            <p>Acceso por usuario y contraseña</p>
-          </div>
-          <div class="feature-item">
-            <span class="mini-dot green"></span>
-            <p>Dashboard independiente del login</p>
-          </div>
-          <div class="feature-item">
-            <span class="mini-dot yellow"></span>
-            <p>Monitoreo de 5 sensores simulados</p>
-          </div>
-          <div class="feature-item">
-            <span class="mini-dot red"></span>
-            <p>Indicadores LED con cambio lógico de color</p>
-          </div>
-        </div>
-
-        <div class="mini-stats">
-          <div class="mini-box">
-            <h3>5</h3>
-            <p>Sensores</p>
-          </div>
-          <div class="mini-box">
-            <h3>LED</h3>
-            <p>Estados visuales</p>
-          </div>
-          <div class="mini-box">
-            <h3>100%</h3>
-            <p>Interfaz responsiva</p>
-          </div>
+  <div class="dashboard-shell">
+    <header class="glass-card topbar">
+      <div class="topbar-left">
+        <div class="brand-logo">SS</div>
+        <div>
+          <p class="eyebrow">Panel principal</p>
+          <h1>SmartSense Dashboard</h1>
         </div>
       </div>
-    </section>
 
-    <section class="login-right">
-      <form method="POST" class="glass-card login-card">
-        <div class="brand-row">
-          <div class="brand-logo">SS</div>
+      <div class="topbar-right">
+        <div class="chip">
+          <span>Usuario</span>
+          <strong>{{ usuario }}</strong>
+        </div>
+
+        <div class="chip">
+          <span>Hora</span>
+          <strong id="clock">--:--:--</strong>
+        </div>
+
+        <a href="{{ url_for('logout') }}" class="btn btn-outline">Cerrar sesión</a>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <section class="glass-card main-panel">
+        <div class="section-head">
           <div>
-            <p class="eyebrow">Acceso seguro</p>
-            <h2>Iniciar sesión</h2>
+            <p class="eyebrow">Área de monitoreo</p>
+            <h2>Sensores simulados e indicadores LED</h2>
+          </div>
+
+          <div class="action-row">
+            <button id="randomBtn" class="btn btn-primary">Generar valores aleatorios</button>
+            <button id="resetBtn" class="btn btn-secondary">Restablecer valores</button>
           </div>
         </div>
 
-        <p class="login-description">
-          Ingresa tus credenciales para acceder al panel principal del sistema.
-        </p>
+        <div class="sensor-grid">
 
-        <div class="input-box">
-          <label for="username">Usuario</label>
-          <input type="text" name="username" id="username" placeholder="Ingresa tu usuario" required>
+          <!-- HUMEDAD -->
+          <article class="sensor-card">
+            <div class="sensor-header">
+              <div>
+                <p class="sensor-code">Sensor 01</p>
+                <h3>Humedad</h3>
+              </div>
+              <span id="badge-humedad" class="pill pill-normal">Estable</span>
+            </div>
+
+            <div class="sensor-value">
+              <span id="value-humedad">45</span>
+              <small>%</small>
+            </div>
+
+            <div class="control-group">
+              <label for="range-humedad">Modificar humedad</label>
+              <input type="range" id="range-humedad" min="0" max="100" value="45">
+            </div>
+
+            <div class="control-group">
+              <label for="input-humedad">Valor manual</label>
+              <input type="number" id="input-humedad" min="0" max="100" value="45">
+            </div>
+
+            <div class="sensor-footer">
+              <div id="led-humedad" class="led led-green"></div>
+              <div>
+                <p class="sensor-state-title">Estado actual</p>
+                <p id="state-humedad">Humedad adecuada</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- TEMPERATURA -->
+          <article class="sensor-card">
+            <div class="sensor-header">
+              <div>
+                <p class="sensor-code">Sensor 02</p>
+                <h3>Temperatura</h3>
+              </div>
+              <span id="badge-temperatura" class="pill pill-normal">Normal</span>
+            </div>
+
+            <div class="sensor-value">
+              <span id="value-temperatura">24</span>
+              <small>°C</small>
+            </div>
+
+            <div class="control-group">
+              <label for="range-temperatura">Modificar temperatura</label>
+              <input type="range" id="range-temperatura" min="0" max="50" value="24">
+            </div>
+
+            <div class="control-group">
+              <label for="input-temperatura">Valor manual</label>
+              <input type="number" id="input-temperatura" min="0" max="50" value="24">
+            </div>
+
+            <div class="sensor-footer">
+              <div id="led-temperatura" class="led led-green"></div>
+              <div>
+                <p class="sensor-state-title">Estado actual</p>
+                <p id="state-temperatura">Temperatura estable</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- LUZ -->
+          <article class="sensor-card">
+            <div class="sensor-header">
+              <div>
+                <p class="sensor-code">Sensor 03</p>
+                <h3>Luz</h3>
+              </div>
+              <span id="badge-luz" class="pill pill-normal">Óptima</span>
+            </div>
+
+            <div class="sensor-value">
+              <span id="value-luz">650</span>
+              <small>lux</small>
+            </div>
+
+            <div class="control-group">
+              <label for="range-luz">Modificar iluminación</label>
+              <input type="range" id="range-luz" min="0" max="1000" value="650">
+            </div>
+
+            <div class="control-group">
+              <label for="input-luz">Valor manual</label>
+              <input type="number" id="input-luz" min="0" max="1000" value="650">
+            </div>
+
+            <div class="sensor-footer">
+              <div id="led-luz" class="led led-green"></div>
+              <div>
+                <p class="sensor-state-title">Estado actual</p>
+                <p id="state-luz">Iluminación adecuada</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- NIVEL -->
+          <article class="sensor-card">
+            <div class="sensor-header">
+              <div>
+                <p class="sensor-code">Sensor 04</p>
+                <h3>Nivel</h3>
+              </div>
+              <span id="badge-nivel" class="pill pill-normal">Óptimo</span>
+            </div>
+
+            <div class="sensor-value">
+              <span id="value-nivel">70</span>
+              <small>%</small>
+            </div>
+
+            <div class="control-group">
+              <label for="range-nivel">Modificar nivel</label>
+              <input type="range" id="range-nivel" min="0" max="100" value="70">
+            </div>
+
+            <div class="control-group">
+              <label for="input-nivel">Valor manual</label>
+              <input type="number" id="input-nivel" min="0" max="100" value="70">
+            </div>
+
+            <div class="sensor-footer">
+              <div id="led-nivel" class="led led-green"></div>
+              <div>
+                <p class="sensor-state-title">Estado actual</p>
+                <p id="state-nivel">Nivel suficiente</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROXIMIDAD -->
+          <article class="sensor-card">
+            <div class="sensor-header">
+              <div>
+                <p class="sensor-code">Sensor 05</p>
+                <h3>Proximidad</h3>
+              </div>
+              <span id="badge-proximidad" class="pill pill-normal">Segura</span>
+            </div>
+
+            <div class="sensor-value">
+              <span id="value-proximidad">90</span>
+              <small>cm</small>
+            </div>
+
+            <div class="control-group">
+              <label for="range-proximidad">Modificar distancia</label>
+              <input type="range" id="range-proximidad" min="0" max="200" value="90">
+            </div>
+
+            <div class="control-group">
+              <label for="input-proximidad">Valor manual</label>
+              <input type="number" id="input-proximidad" min="0" max="200" value="90">
+            </div>
+
+            <div class="sensor-footer">
+              <div id="led-proximidad" class="led led-green"></div>
+              <div>
+                <p class="sensor-state-title">Estado actual</p>
+                <p id="state-proximidad">Distancia segura</p>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="glass-card side-card">
+          <p class="eyebrow">Resumen del sistema</p>
+          <h2 id="overallTitle">Operación normal</h2>
+          <p id="overallText">
+            Todos los sensores se encuentran en rangos adecuados y el sistema opera correctamente.
+          </p>
         </div>
 
-        <div class="input-box">
-          <label for="password">Contraseña</label>
-          <input type="password" name="password" id="password" placeholder="Ingresa tu contraseña" required>
+        <div class="glass-card side-card stats-grid">
+          <div class="stat-box">
+            <span id="stat-total">5</span>
+            <p>Total sensores</p>
+          </div>
+          <div class="stat-box">
+            <span id="stat-normal">5</span>
+            <p>Normales</p>
+          </div>
+          <div class="stat-box">
+            <span id="stat-warning">0</span>
+            <p>Advertencia</p>
+          </div>
+          <div class="stat-box">
+            <span id="stat-critical">0</span>
+            <p>Críticos</p>
+          </div>
         </div>
 
-        <button type="submit" class="btn btn-primary full-width">Entrar al sistema</button>
+        <div class="glass-card side-card">
+          <h3>Lógica de LEDs</h3>
+          <div class="legend-item"><span class="legend-led led-green"></span> Verde: condición estable</div>
+          <div class="legend-item"><span class="legend-led led-yellow"></span> Amarillo: advertencia</div>
+          <div class="legend-item"><span class="legend-led led-red"></span> Rojo: condición crítica</div>
+          <div class="legend-item"><span class="legend-led led-blue"></span> Azul: temperatura baja</div>
+        </div>
 
-        {% if error %}
-          <p class="message error">{{ error }}</p>
-        {% else %}
-          <p class="message ok">Usuario demo: admin | Contraseña demo: 12345</p>
-        {% endif %}
-      </form>
-    </section>
-  </main>
+        <div class="glass-card side-card">
+          <h3>Condiciones</h3>
+          <ul class="rules">
+            <li><strong>Humedad:</strong> ≤ 8 rojo, 9 a 20 amarillo, mayor a 20 verde.</li>
+            <li><strong>Temperatura:</strong> menor a 18 azul, 18 a 28 verde, 29 a 35 amarillo, mayor a 35 rojo.</li>
+            <li><strong>Luz:</strong> menor a 200 rojo, 200 a 600 amarillo, mayor a 600 verde.</li>
+            <li><strong>Nivel:</strong> menor a 25 rojo, 25 a 60 amarillo, mayor a 60 verde.</li>
+            <li><strong>Proximidad:</strong> menor a 20 rojo, 20 a 80 amarillo, mayor a 80 verde.</li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+  </div>
 
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
