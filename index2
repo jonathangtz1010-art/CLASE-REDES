@@ -46,14 +46,13 @@
           </div>
 
           <div class="action-row">
-            <button id="randomBtn" class="btn btn-primary">Generar valores aleatorios</button>
-            <button id="resetBtn" class="btn btn-secondary">Restablecer valores</button>
+            <button type="button" id="randomBtn" class="btn btn-primary">Generar valores aleatorios</button>
+            <button type="button" id="resetBtn" class="btn btn-secondary">Restablecer valores</button>
           </div>
         </div>
 
         <div class="sensor-grid">
 
-          <!-- HUMEDAD -->
           <article class="sensor-card">
             <div class="sensor-header">
               <div>
@@ -87,7 +86,6 @@
             </div>
           </article>
 
-          <!-- TEMPERATURA -->
           <article class="sensor-card">
             <div class="sensor-header">
               <div>
@@ -121,7 +119,6 @@
             </div>
           </article>
 
-          <!-- LUZ -->
           <article class="sensor-card">
             <div class="sensor-header">
               <div>
@@ -155,7 +152,6 @@
             </div>
           </article>
 
-          <!-- NIVEL -->
           <article class="sensor-card">
             <div class="sensor-header">
               <div>
@@ -189,7 +185,6 @@
             </div>
           </article>
 
-          <!-- PROXIMIDAD -->
           <article class="sensor-card">
             <div class="sensor-header">
               <div>
@@ -252,25 +247,6 @@
             <span id="stat-critical">0</span>
             <p>Críticos</p>
           </div>
-        </div>
-
-        <div class="glass-card side-card">
-          <h3>Lógica de LEDs</h3>
-          <div class="legend-item"><span class="legend-led led-green"></span> Verde: condición estable</div>
-          <div class="legend-item"><span class="legend-led led-yellow"></span> Amarillo: advertencia</div>
-          <div class="legend-item"><span class="legend-led led-red"></span> Rojo: condición crítica</div>
-          <div class="legend-item"><span class="legend-led led-blue"></span> Azul: temperatura baja</div>
-        </div>
-
-        <div class="glass-card side-card">
-          <h3>Condiciones</h3>
-          <ul class="rules">
-            <li><strong>Humedad:</strong> ≤ 8 rojo, 9 a 20 amarillo, mayor a 20 verde.</li>
-            <li><strong>Temperatura:</strong> menor a 18 azul, 18 a 28 verde, 29 a 35 amarillo, mayor a 35 rojo.</li>
-            <li><strong>Luz:</strong> menor a 200 rojo, 200 a 600 amarillo, mayor a 600 verde.</li>
-            <li><strong>Nivel:</strong> menor a 25 rojo, 25 a 60 amarillo, mayor a 60 verde.</li>
-            <li><strong>Proximidad:</strong> menor a 20 rojo, 20 a 80 amarillo, mayor a 80 verde.</li>
-          </ul>
         </div>
       </aside>
     </main>
