@@ -1,97 +1,47 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartSense | Login</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body class="login-page">
+from flask import Flask, render_template, request, redirect, url_for, session
 
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-  <div class="bg-grid"></div>
+app = Flask(__name__, template_folder="templates", static_folder="static")
+app.secret_key = "smartsense_secret_2026"
 
-  <main class="login-layout">
-    <section class="login-left">
-      <div class="glass-card intro-card">
-        <p class="eyebrow">Sistema profesional de monitoreo</p>
-        <h1>SmartSense Control Center</h1>
-        <p class="intro-text">
-          Plataforma web con acceso controlado para monitoreo de sensores simulados
-          e indicadores virtuales tipo LED.
-        </p>
+USUARIO_VALIDO = "admin"
+CONTRASENA_VALIDA = "12345"
 
-        <div class="feature-list">
-          <div class="feature-item">
-            <span class="mini-dot blue"></span>
-            <p>Acceso por usuario y contraseña</p>
-          </div>
-          <div class="feature-item">
-            <span class="mini-dot green"></span>
-            <p>Dashboard independiente del login</p>
-          </div>
-          <div class="feature-item">
-            <span class="mini-dot yellow"></span>
-            <p>Monitoreo de 5 sensores simulados</p>
-          </div>
-          <div class="feature-item">
-            <span class="mini-dot red"></span>
-            <p>Indicadores LED con cambio lógico de color</p>
-          </div>
-        </div>
 
-        <div class="mini-stats">
-          <div class="mini-box">
-            <h3>5</h3>
-            <p>Sensores</p>
-          </div>
-          <div class="mini-box">
-            <h3>LED</h3>
-            <p>Visualización</p>
-          </div>
-          <div class="mini-box">
-            <h3>24/7</h3>
-            <p>Simulación</p>
-          </div>
-        </div>
-      </div>
-    </section>
+@app.route("/", methods=["GET", "POST"])
+def login():
+    if session.get("activa"):
+        return redirect(url_for("dashboard"))
 
-    <section class="login-right">
-      <form method="POST" class="glass-card login-card">
-        <div class="brand-row">
-          <div class="brand-logo">SS</div>
-          <div>
-            <p class="eyebrow">Acceso seguro</p>
-            <h2>Iniciar sesión</h2>
-          </div>
-        </div>
+    error = ""
 
-        <p class="login-description">
-          Ingresa tus credenciales para acceder al panel principal del sistema.
-        </p>
+    if request.method == "POST":
+        usuario = request.form.get("username", "").strip()
+        contrasena = request.form.get("password", "").strip()
 
-        <div class="input-box">
-          <label for="username">Usuario</label>
-          <input type="text" name="username" id="username" placeholder="Ingresa tu usuario" required>
-        </div>
+        if usuario == USUARIO_VALIDO and contrasena == CONTRASENA_VALIDA:
+            session["activa"] = True
+            session["usuario"] = usuario
+            return redirect(url_for("dashboard"))
+        else:
+            error = "Usuario o contraseña incorrectos."
 
-        <div class="input-box">
-          <label for="password">Contraseña</label>
-          <input type="password" name="password" id="password" placeholder="Ingresa tu contraseña" required>
-        </div>
+    return render_template("login.html", error=error)
 
-        <button type="submit" class="btn btn-primary full-width">Entrar al sistema</button>
 
-        {% if error %}
-          <p class="message error">{{ error }}</p>
-        {% else %}
-          <p class="message ok">Usuario demo: admin | Contraseña demo: 12345</p>
-        {% endif %}
-      </form>
-    </section>
-  </main>
+@app.route("/dashboard")
+def dashboard():
+    if not session.get("activa"):
+        return redirect(url_for("login"))
 
-</body>
-</html>5000)
+    usuario = session.get("usuario", "admin")
+    return render_template("index.html", usuario=usuario)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)
