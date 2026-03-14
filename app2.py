@@ -28,7 +28,7 @@ def login():
     return render_template("login.html", error=error)
 
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=["GET"])
 def dashboard():
     if not session.get("activa"):
         return redirect(url_for("login"))
@@ -37,7 +37,7 @@ def dashboard():
     return render_template("index.html", usuario=usuario)
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["GET"])
 def logout():
     session.clear()
     return redirect(url_for("login"))
