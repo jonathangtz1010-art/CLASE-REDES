@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Configuración básica -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoreo de sensores</title>
+
+  <!-- Archivo de estilos -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Fondo decorativo -->
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-grid"></div>
+
+  <!-- =========================
+       PANTALLA DE LOGIN
+  ========================== -->
+  <section id="loginSection" class="screen active">
+    <div class="login-card">
+
+      <!-- Encabezado -->
+      <div class="brand-box">
+        <div class="brand-icon">◉</div>
+        <div>
+          <h1>Monitoreo de sensores</h1>
+          <p>Acceso al sistema de supervisión virtual</p>
+        </div>
+      </div>
+
+      <h2>Inicio de sesión</h2>
+      <p class="login-text">
+        Ingresa tu usuario y contraseña para visualizar la interfaz principal del sistema.
+      </p>
+
+      <!-- Campo usuario -->
+      <div class="input-group">
+        <label for="usuario">Usuario</label>
+        <input type="text" id="usuario" placeholder="Ingresa tu usuario">
+      </div>
+
+      <!-- Campo contraseña -->
+      <div class="input-group">
+        <label for="contrasena">Contraseña</label>
+        <input type="password" id="contrasena" placeholder="Ingresa tu contraseña">
+      </div>
+
+      <!-- Botón login -->
+      <button id="btnLogin" class="btn btn-primary">Entrar al sistema</button>
+
+      <!-- Mensaje de acceso -->
+      <p id="mensajeLogin" class="mensaje-login"></p>
+    </div>
+  </section>
+
+  <!-- =========================
+       PANTALLA PRINCIPAL
+  ========================== -->
+  <section id="dashboardSection" class="screen">
+    <header class="topbar">
+      <div class="brand-box">
+        <div class="brand-icon">◉</div>
+        <div>
+          <h1>Monitoreo de sensores</h1>
+          <p>Panel principal con sensores simulados y LEDs virtuales</p>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="time-box">
+          <span>Última actualización</span>
+          <strong id="horaActual">--:--:--</strong>
+        </div>
+
+        <button id="btnLogout" class="btn btn-outline">Cerrar sesión</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <!-- Panel principal -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Área de monitoreo</h2>
+          <span class="status-live">Sistema activo</span>
+        </div>
+
+        <!-- Aquí JavaScript crea las tarjetas -->
+        <div id="cardsGrid" class="cards-grid"></div>
+
+        <div class="action-row">
+          <button id="btnAleatorio" class="btn btn-primary">Generar valores aleatorios</button>
+          <button id="btnReset" class="btn btn-secondary">Restablecer valores</button>
+        </div>
+      </section>
+
+      <!-- Panel lateral -->
+      <aside class="panel panel-side">
+        <div class="panel-header">
+          <h2>Resumen del sistema</h2>
+        </div>
+
+        <div class="summary-card">
+          <p class="summary-label">Resumen del sistema</p>
+          <h3 id="estadoGeneral">Operación normal</h3>
+          <p id="descripcionGeneral" class="summary-text">
+            Todos los sensores se encuentran en rangos adecuados y el sistema opera correctamente.
+          </p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span id="totalSensores" class="stat-number">5</span>
+            <p class="stat-label">Total sensores</p>
+          </div>
+
+          <div class="stat-card">
+            <span id="totalNormales" class="stat-number">5</span>
+            <p class="stat-label">Normales</p>
+          </div>
+
+          <div class="stat-card">
+            <span id="totalAdvertencia" class="stat-number">0</span>
+            <p class="stat-label">Advertencia</p>
+          </div>
+
+          <div class="stat-card">
+            <span id="totalCriticos" class="stat-number">0</span>
+            <p class="stat-label">Críticos</p>
+          </div>
+        </div>
+
+        <div class="legend-card">
+          <h3>Lógica visual de LEDs</h3>
+          <div class="legend-item"><span class="mini-led red"></span><p><strong>Rojo:</strong> condición crítica</p></div>
+          <div class="legend-item"><span class="mini-led yellow"></span><p><strong>Amarillo:</strong> advertencia</p></div>
+          <div class="legend-item"><span class="mini-led green"></span><p><strong>Verde:</strong> condición estable</p></div>
+        </div>
+
+        <div class="logic-card">
+          <h3>Condiciones aplicadas</h3>
+          <ul id="logicList"></ul>
+        </div>
+      </aside>
+    </main>
+  </section>
+
+  <!-- Archivo JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
