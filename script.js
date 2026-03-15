@@ -15,11 +15,6 @@ const $ = id => document.getElementById(id);
 const cap = txt => txt.charAt(0).toUpperCase() + txt.slice(1);
 
 /* =========================================
-   LIMITAR VALORES DENTRO DE UN RANGO
-========================================= */
-const limitar = (v, min, max) => Math.max(min, Math.min(max, parseInt(v) || min));
-
-/* =========================================
    NÚMERO ALEATORIO
 ========================================= */
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -182,11 +177,6 @@ function crearInterfaz() {
         <input type="range" id="${s.id}Range" min="${s.min}" max="${s.max}" value="${s.valor}">
       </div>
 
-      <div class="control-box">
-        <label for="${s.id}Input">Valor manual</label>
-        <input type="number" id="${s.id}Input" min="${s.min}" max="${s.max}" value="${s.valor}">
-      </div>
-
       <div class="led-info">
         <div class="led led-off" id="led${cap(s.id)}"></div>
         <div>
@@ -208,7 +198,6 @@ function crearInterfaz() {
 function actualizarSensor(s) {
   const v = +$(s.id + "Range").value;
 
-  $(s.id + "Input").value = v;
   $(s.id + "Valor").textContent = v;
 
   const [color, texto] = s.evaluar(v);
@@ -257,22 +246,13 @@ function actualizarTodo() {
 }
 
 /* =========================================
-   ENLAZAR RANGE E INPUT
+   ENLAZAR SLIDERS
 ========================================= */
 function enlazarControles() {
   sensores.forEach(s => {
     const range = $(s.id + "Range");
-    const input = $(s.id + "Input");
 
     range.addEventListener("input", () => {
-      input.value = range.value;
-      actualizarTodo();
-    });
-
-    input.addEventListener("input", () => {
-      const v = limitar(input.value, s.min, s.max);
-      input.value = v;
-      range.value = v;
       actualizarTodo();
     });
   });
@@ -318,7 +298,6 @@ function aleatorio() {
   sensores.forEach(s => {
     const v = random(s.min, s.max);
     $(s.id + "Range").value = v;
-    $(s.id + "Input").value = v;
   });
 
   actualizarTodo();
@@ -330,7 +309,6 @@ function aleatorio() {
 function resetear() {
   sensores.forEach(s => {
     $(s.id + "Range").value = s.valor;
-    $(s.id + "Input").value = s.valor;
   });
 
   actualizarTodo();
