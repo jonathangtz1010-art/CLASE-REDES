@@ -1,15 +1,16 @@
+#include <Arduino.h>
+
 const int SENSOR_PIN = A0;
 const int UMBRAL = 500;
 const int HYSTERESIS = 15;
 
-char bufferLine[40];
-byte bufferIndex = 0;
+String bufferLine = "";
 bool activeState = false;
 
 int readStableA0() {
   long sum = 0;
-  const byte n = 8;
-  for (byte i = 0; i < n; i++) {
+  const int n = 10;
+  for (int i = 0; i < n; i++) {
     sum += analogRead(SENSOR_PIN);
     delay(2);
   }
@@ -18,11 +19,11 @@ int readStableA0() {
 
 bool computeState(int value) {
   if (activeState) {
-    if (value <= UMBRAL - HYSTERESIS) {
+    if (value >= UMBRAL + HYSTERESIS) {
       activeState = false;
     }
   } else {
-    if (value >= UMBRAL + HYSTERESIS) {
+    if (value <= UMBRAL - HYSTERESIS) {
       activeState = true;
     }
   }
@@ -44,7 +45,7 @@ void printStatus() {
   Serial.print(active ? 1 : 0);
 
   Serial.print(" green=");
-  Serial.print(active ? 1 : 0);
+  Serial.print(active ? 0 : 1);
 
   Serial.print(" state=");
   Serial.print(active ? "ACTIVO" : "REPOSO");
@@ -56,17 +57,16 @@ void printStatus() {
   Serial.println();
 }
 
-void handleCommand(char *cmd) {
-  for (int i = 0; cmd[i]; i++) {
-    cmd[i] = toupper(cmd[i]);
-  }
+void handleCommand(String cmd) {
+  cmd.trim();
+  cmd.toUpperCase();
 
-  if (strcmp(cmd, "PING") == 0) {
+  if (cmd == "PING") {
     Serial.println("OK pong");
     return;
   }
 
-  if (strcmp(cmd, "GET") == 0 || strcmp(cmd, "READ") == 0 || strcmp(cmd, "STATUS") == 0) {
+  if (cmd == "GET" || cmd == "READ" || cmd == "STATUS") {
     printStatus();
     return;
   }
@@ -88,15 +88,12 @@ void loop() {
     char c = (char)Serial.read();
 
     if (c == '\n' || c == '\r') {
-      if (bufferIndex > 0) {
-        bufferLine[bufferIndex] = '\0';
+      if (bufferLine.length() > 0) {
         handleCommand(bufferLine);
-        bufferIndex = 0;
+        bufferLine = "";
       }
     } else {
-      if (bufferIndex < sizeof(bufferLine) - 1) {
-        bufferLine[bufferIndex++] = c;
-      }
+      bufferLine += c;
     }
   }
 }
