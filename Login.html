@@ -13,7 +13,7 @@
       <h1>LDR Circuit Monitor</h1>
       <p class="login-description">
         Plataforma web para recopilar los datos de la luz entrante del LDR, mostrar el estado
-        del LED rojo y LED verde, y visualizar el comportamiento del circuito con una presentación profesional.
+        del sistema y visualizar el comportamiento del circuito con una presentación profesional.
       </p>
 
       <div class="login-points">
@@ -29,7 +29,7 @@
           <span class="dot dot-blue"></span>
           <div>
             <strong>LEDs por hardware</strong>
-            <small>El LED rojo y el LED verde se activan por el transistor del circuito, no por pines directos del Arduino.</small>
+            <small>Los indicadores se activan según el comportamiento del circuito físico.</small>
           </div>
         </article>
 
@@ -37,7 +37,7 @@
           <span class="dot dot-orange"></span>
           <div>
             <strong>Gráfica sincronizada</strong>
-            <small>La gráfica avanza cuando el circuito está activo y se congela cuando queda en reposo.</small>
+            <small>La gráfica avanza cuando el sistema está activo y se congela cuando queda en reposo.</small>
           </div>
         </article>
       </div>
@@ -63,11 +63,14 @@
           {% if error %}
             <div class="login-alert error">{{ error }}</div>
           {% else %}
-            <div class="login-alert neutral">Usuario: admin | Contraseña: 1234</div>
+            <div class="login-alert neutral">Ingresa con el usuario y contraseña configurados en app.py</div>
           {% endif %}
         </form>
       </div>
     </section>
+  </main>
+</body>
+</html>
   </main>
 </body>
 </html>
