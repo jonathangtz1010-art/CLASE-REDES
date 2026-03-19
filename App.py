@@ -6,28 +6,17 @@ from werkzeug.security import check_password_hash
 from datetime import datetime
 import socket
 
-# =========================================================
-# SOLO CAMBIA ESTAS 3 LÍNEAS CUANDO QUIERAS NUEVO ACCESO
-# =========================================================
-APP_USER = "Diana"
-APP_PW_HASH = "AQUI_PEGA_EL_HASH_GENERADO_CON_EL_SCRIPT"
-SECRET_KEY = "Redes_LDR_2026_Sesion"
+APP_USER = "Alejandro"
+APP_PASS = "PEGA_AQUI_EL_HASH_QUE_TE_GENERO_EL_COMANDO"
+SECRET_KEY = "REDES_A0_LDR_2026"
 
-# =========================================================
-# CONFIGURACIÓN DEL SISTEMA
-# =========================================================
 TCP_HOST = "127.0.0.1"
 TCP_PORT = 5001
 
 SERIAL_LABEL = "/dev/ttyACM0"
 SERIAL_BAUD = 115200
 
-app = Flask(
-    __name__,
-    template_folder="templates",
-    static_folder="static",
-    static_url_path="/static"
-)
+app = Flask(__name__, template_folder="templates", static_folder="static", static_url_path="/static")
 app.secret_key = SECRET_KEY
 
 def is_logged_in():
@@ -46,22 +35,13 @@ def send_cmd(cmd: str) -> str:
 
 def parse_status(resp: str):
     data = {}
-
     for item in resp.split():
         if "=" in item:
             k, v = item.split("=", 1)
             data[k.strip()] = v.strip()
 
-    try:
-        a0 = int(data.get("a0", "0"))
-    except ValueError:
-        a0 = 0
-
-    try:
-        threshold = int(data.get("threshold", "500"))
-    except ValueError:
-        threshold = 500
-
+    a0 = int(data.get("a0", "0"))
+    threshold = int(data.get("threshold", "500"))
     red_on = data.get("red", "0") == "1"
     green_on = data.get("green", "0") == "1"
     state_code = data.get("state", "REPOSO")
@@ -79,14 +59,14 @@ def parse_status(resp: str):
         state_label = "Sistema activo"
         state_short = "ACTIVO"
         color = "green"
-        message = "La luz medida por el LDR superó el umbral y el sistema se encuentra activo."
-        recommendation = "La gráfica continúa capturando porque el sistema está activo."
+        message = "La luz entrante medida por el LDR superó el umbral y el circuito activó físicamente el LED rojo y el LED verde mediante el transistor."
+        recommendation = "La gráfica continúa capturando porque el sistema está en estado activo."
     else:
         state_label = "Sistema en reposo"
         state_short = "REPOSO"
         color = "red"
-        message = "La luz medida por el LDR no supera el umbral. El sistema permanece en reposo."
-        recommendation = "La gráfica queda congelada hasta que el sistema vuelva a activarse."
+        message = "La luz entrante medida por el LDR no supera el umbral. El circuito mantiene apagados el LED rojo y el LED verde."
+        recommendation = "La gráfica queda congelada hasta que el circuito vuelva a entrar en estado activo."
 
     return {
         "ok": True,
@@ -117,14 +97,11 @@ def parse_status(resp: str):
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if is_logged_in():
-        return redirect(url_for("index"))
-
     if request.method == "POST":
         user = request.form.get("username", "").strip()
         pw = request.form.get("password", "").strip()
 
-        if user == APP_USER and check_password_hash(APP_PW_HASH, pw):
+        if user == APP_USER and check_password_hash(APP_PASS, pw):
             session["logged_in"] = True
             return redirect(url_for("index"))
 
@@ -150,16 +127,13 @@ def api_status():
 
     try:
         resp = send_cmd("STATUS")
-
         if not resp.startswith("OK"):
             return jsonify({
                 "ok": False,
                 "error": resp,
                 "updated_at": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             })
-
         return jsonify(parse_status(resp))
-
     except Exception as e:
         return jsonify({
             "ok": False,
