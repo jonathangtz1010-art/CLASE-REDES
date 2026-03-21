@@ -35,7 +35,7 @@ const waveCanvas = document.getElementById("waveCanvas");
 const waveStatus = document.getElementById("waveStatus");
 const waveCtx = waveCanvas.getContext("2d");
 
-const POLL_MS = 120;
+const POLL_MS = 180;
 const MAX_SAMPLES = 220;
 
 let samplesA0 = [];
@@ -69,8 +69,7 @@ function setLedState(greenOn, redOn) {
   }
 }
 
-function pushWaveSample(a0, active) {
-  if (!active) return;
+function pushWaveSample(a0) {
   samplesA0.push(a0);
   if (samplesA0.length > MAX_SAMPLES) samplesA0.shift();
 }
@@ -233,11 +232,11 @@ function updateUI(data) {
     waveStatus.textContent = "Captura activa";
     setColorClass(waveStatus, "green");
   } else {
-    waveStatus.textContent = "Captura congelada";
+    waveStatus.textContent = "Captura en reposo";
     setColorClass(waveStatus, "red");
   }
 
-  pushWaveSample(data.a0, data.active);
+  pushWaveSample(data.a0);
   drawWaveform(data.threshold);
 
   const signature = `${data.state_label}-${data.a0}-${data.active}`;
