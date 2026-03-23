@@ -1,74 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LDR Circuit Monitor | Acceso</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema embebido</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="login-body">
-  <main class="login-shell">
-    <section class="login-left">
-      <div class="login-badge">Monitoreo profesional del circuito</div>
-      <h1>LDR Circuit Monitor</h1>
-      <p class="login-description">
-        Plataforma web para recopilar los datos de la luz entrante del LDR, mostrar el estado
-        del sistema y visualizar el comportamiento del circuito con una presentación profesional.
-      </p>
+    <div class="login-card">
+        <h1>Iniciar sesión</h1>
 
-      <div class="login-points">
-        <article class="login-point">
-          <span class="dot dot-green"></span>
-          <div>
-            <strong>Lectura del LDR</strong>
-            <small>Se presenta en tiempo real el valor de A0 comparado contra el umbral configurado.</small>
-          </div>
-        </article>
-
-        <article class="login-point">
-          <span class="dot dot-blue"></span>
-          <div>
-            <strong>LEDs por hardware</strong>
-            <small>Los indicadores se activan según el comportamiento del circuito físico.</small>
-          </div>
-        </article>
-
-        <article class="login-point">
-          <span class="dot dot-orange"></span>
-          <div>
-            <strong>Gráfica sincronizada</strong>
-            <small>La gráfica avanza cuando el sistema está activo y se congela cuando queda en reposo.</small>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="login-right">
-      <div class="login-form-card">
-        <div class="form-top">
-          <span class="form-chip">Acceso seguro</span>
-          <h2>Iniciar sesión</h2>
-          <p>Ingresa tus credenciales para entrar al panel principal del sistema.</p>
-        </div>
-
-        <form method="POST" action="{{ url_for('login') }}" class="login-form">
-          <label for="username">Usuario</label>
-          <input id="username" name="username" type="text" placeholder="Escribe tu usuario" required>
-
-          <label for="password">Contraseña</label>
-          <input id="password" name="password" type="password" placeholder="Escribe tu contraseña" required>
-
-          <button type="submit" class="login-btn">Entrar al panel</button>
-
-          {% if error %}
-            <div class="login-alert error">{{ error }}</div>
-          {% else %}
-            <div class="login-alert neutral">Ingresa con el usuario y contraseña configurados en app.py</div>
-          {% endif %}
+        <form method="POST">
+            <input type="text" name="usuario" placeholder="Usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Entrar</button>
         </form>
-      </div>
-    </section>
-  </main>
+
+        <p class="mensaje">{{ mensaje }}</p>
+    </div>
 </body>
 </html>
   </main>
