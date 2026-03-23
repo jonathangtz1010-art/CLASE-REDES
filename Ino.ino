@@ -6,9 +6,9 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 // Puente H
-const int ENA = 2;   // gris
-const int IN1 = 3;   // azul claro
-const int IN2 = 4;   // morado
+const int ENA = 3;
+const int IN1 = 4;
+const int IN2 = 2;
 
 // Encoder
 const int encoderA = 6;   // amarillo
