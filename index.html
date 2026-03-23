@@ -1,221 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LDR Circuit Monitor | Dashboard</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo del sistema</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="dashboard-body">
-  <main class="dashboard-layout">
-    <aside class="sidebar">
-      <div class="sidebar-brand">
-        <div class="brand-icon">LC</div>
-        <div>
-          <h1>LDR Circuit</h1>
-          <p>Professional Monitoring Dashboard</p>
-        </div>
-      </div>
+<body>
+    <header class="topbar">
+        <h1>Sistema embebido con DHT11 y motor DC</h1>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
+    </header>
 
-      <div class="sidebar-card">
-        <span class="sidebar-label">Estado general</span>
-        <div id="sidebarState" class="sidebar-state neutral">Cargando...</div>
-      </div>
-
-      <div class="sidebar-card">
-        <span class="sidebar-label">Última actualización</span>
-        <div id="lastUpdate" class="sidebar-info">Esperando lectura...</div>
-      </div>
-
-      <div class="sidebar-card">
-        <span class="sidebar-label">Enlace TCP</span>
-        <div id="tcpTarget" class="sidebar-info">--</div>
-      </div>
-
-      <div class="sidebar-card">
-        <span class="sidebar-label">Puerto serial</span>
-        <div id="serialPort" class="sidebar-info">--</div>
-      </div>
-
-      <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
-    </aside>
-
-    <section class="content">
-      <header class="hero">
-        <div class="hero-text-block">
-          <span class="hero-chip">Lectura del LDR y estado del circuito</span>
-          <h2>Panel principal del sistema</h2>
-          <p>
-            Esta interfaz recopila el dato de la luz entrante del LDR en A0, interpreta el estado del circuito,
-            muestra los indicadores del sistema y presenta una gráfica tipo onda sincronizada con la activación.
-          </p>
+    <main class="container">
+        <div class="card">
+            <h2>Temperatura</h2>
+            <p id="temperatura" class="value">-- °C</p>
         </div>
 
-        <div class="hero-status-box">
-          <span class="hero-label">Lectura actual</span>
-          <strong id="heroStatus">Cargando...</strong>
-          <small id="heroMessage">Esperando respuesta del sistema</small>
+        <div class="card">
+            <h2>Humedad</h2>
+            <p id="humedad" class="value">-- %</p>
         </div>
-      </header>
 
-      <section class="top-grid">
-        <article class="pro-card wave-card">
-          <div class="card-header">
-            <h3>Gráfica tipo onda</h3>
-            <span class="card-tag">A0 / Umbral</span>
-          </div>
+        <div class="card">
+            <h2>Rango activo</h2>
+            <p id="rango" class="value">--</p>
+        </div>
 
-          <div class="wave-meta">
-            <div id="waveStatus" class="wave-status neutral">Preparando gráfica...</div>
-            <div class="wave-legend">
-              <span class="legend-item"><i class="legend-line blue"></i> A0</span>
-              <span class="legend-item"><i class="legend-line orange"></i> Umbral</span>
+        <div class="card">
+            <h2>Velocidad</h2>
+            <p id="velocidad" class="value">--</p>
+        </div>
+
+        <div class="card">
+            <h2>PWM</h2>
+            <p id="pwm" class="value">--</p>
+        </div>
+
+        <div class="card">
+            <h2>Estado del motor</h2>
+            <p id="motorEstado" class="value">--</p>
+        </div>
+
+        <div class="card full">
+            <h2>Estado general del sistema</h2>
+            <p id="estado" class="value">--</p>
+            <div class="status-bar">
+                <div id="statusFill" class="status-fill"></div>
             </div>
-          </div>
+            <p id="ultimaActualizacion" class="update-text">Última actualización: --</p>
+        </div>
+    </main>
 
-          <div class="wave-shell">
-            <canvas id="waveCanvas"></canvas>
-          </div>
-
-          <p class="wave-note">
-            La gráfica registra muestras únicamente cuando el circuito está activo. En reposo, el trazo queda congelado.
-          </p>
-        </article>
-
-        <article class="pro-card state-card">
-          <div class="card-header">
-            <h3>Estado del sistema</h3>
-            <span class="card-tag">Análisis</span>
-          </div>
-
-          <div id="systemStateChip" class="big-status neutral">Esperando lectura</div>
-
-          <div class="state-mini-grid">
-            <div class="mini-state-box">
-              <span>Modo</span>
-              <strong id="modeType">--</strong>
-            </div>
-            <div class="mini-state-box">
-              <span>Entrada</span>
-              <strong id="inputPin">--</strong>
-            </div>
-          </div>
-
-          <p id="statusMessage" class="status-message">
-            Aquí se mostrará la interpretación del sistema.
-          </p>
-
-          <div id="recommendationBox" class="recommendation-box">
-            Recomendación del sistema pendiente...
-          </div>
-        </article>
-      </section>
-
-      <section class="middle-grid">
-        <article class="pro-card">
-          <div class="card-header">
-            <h3>LED rojo y LED verde</h3>
-            <span class="card-tag">Indicadores</span>
-          </div>
-
-          <div class="led-zone">
-            <div class="led-box">
-              <div id="ledGreen" class="virtual-led green off"></div>
-              <div class="led-box-text">
-                <strong>LED Verde</strong>
-                <span id="greenStateText">En espera</span>
-              </div>
-            </div>
-
-            <div class="led-box">
-              <div id="ledRed" class="virtual-led red off"></div>
-              <div class="led-box-text">
-                <strong>LED Rojo</strong>
-                <span id="redStateText">En espera</span>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="pro-card">
-          <div class="card-header">
-            <h3>Datos de la luz entrante</h3>
-            <span class="card-tag">LDR</span>
-          </div>
-
-          <div class="signal-block">
-            <div class="signal-row">
-              <div class="signal-head">
-                <strong>Valor A0</strong>
-                <span id="a0Value">--</span>
-              </div>
-              <div class="meter"><div id="a0Bar" class="bar-fill blue"></div></div>
-              <small id="a0Percent">--</small>
-            </div>
-
-            <div class="signal-row">
-              <div class="signal-head">
-                <strong>Umbral fijo</strong>
-                <span id="thresholdValue">--</span>
-              </div>
-              <div class="meter"><div id="thresholdBar" class="bar-fill orange"></div></div>
-              <small id="thresholdPercent">--</small>
-            </div>
-
-            <div class="signal-row signal-row-last">
-              <div class="signal-head">
-                <strong>Diferencia</strong>
-                <span id="differenceValue">--</span>
-              </div>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <section class="bottom-grid">
-        <article class="pro-card">
-          <div class="card-header">
-            <h3>Resumen técnico</h3>
-            <span class="card-tag">Datos</span>
-          </div>
-
-          <div class="metrics-grid">
-            <div class="metric-card">
-              <span>Entrada</span>
-              <strong id="metricInput">--</strong>
-            </div>
-
-            <div class="metric-card">
-              <span>Umbral</span>
-              <strong id="metricThreshold">--</strong>
-            </div>
-
-            <div class="metric-card">
-              <span>LEDs</span>
-              <strong id="metricLedsMode">--</strong>
-            </div>
-
-            <div class="metric-card">
-              <span>Driver</span>
-              <strong id="metricDriver">--</strong>
-            </div>
-          </div>
-        </article>
-
-        <article class="pro-card">
-          <div class="card-header">
-            <h3>Historial reciente</h3>
-            <span class="card-tag">Eventos</span>
-          </div>
-
-          <div id="historyList" class="history-list">
-            <div class="history-empty">Todavía no hay eventos registrados.</div>
-          </div>
-        </article>
-      </section>
-    </section>
-  </main>
-
-  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
