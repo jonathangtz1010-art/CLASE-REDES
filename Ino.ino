@@ -1,138 +1,104 @@
-const int SENSOR_PIN = A0;
-const int UMBRAL = 500;
-const int HYSTERESIS = 20;          // un poco más amplia para evitar brincos
-const unsigned long HOLD_MS = 350;  // tiempo mínimo para confirmar cambio
+#include <DHT.h>
 
-char bufferLine[40];
-byte bufferIndex = 0;
+#define DHTPIN 2
+#define DHTTYPE DHT11
 
-bool activeState = false;
-bool pendingState = false;
-bool hasPendingChange = false;
-unsigned long pendingSince = 0;
+DHT dht(DHTPIN, DHTTYPE);
 
-int readStableA0() {
-  long sum = 0;
-  const byte n = 16;   // más muestras = más estabilidad
-  for (byte i = 0; i < n; i++) {
-    sum += analogRead(SENSOR_PIN);
-    delay(2);
+// Puente H
+const int ENA = 5;   // PWM
+const int IN1 = 8;
+const int IN2 = 9;
+
+// Variables globales
+float temperatura = 0.0;
+float humedad = 0.0;
+String rango = "";
+String velocidad = "";
+String estado = "";
+int pwmValue = 0;
+
+String buffer = "";
+
+void actualizarControl(float temp) {
+  if (temp < 24.0) {
+    rango = "Rango 1";
+    velocidad = "Baja";
+    estado = "Temperatura baja";
+    pwmValue = 90;
+  } 
+  else if (temp >= 24.0 && temp < 30.0) {
+    rango = "Rango 2";
+    velocidad = "Media";
+    estado = "Temperatura media";
+    pwmValue = 170;
+  } 
+  else {
+    rango = "Rango 3";
+    velocidad = "Alta";
+    estado = "Temperatura alta";
+    pwmValue = 255;
   }
-  return sum / n;
+
+  // Motor en un solo sentido
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(ENA, pwmValue);
 }
 
-bool computeDesiredState(int value) {
-  if (activeState) {
-    if (value <= UMBRAL - HYSTERESIS) {
-      return false;
-    }
-    return true;
-  } else {
-    if (value >= UMBRAL + HYSTERESIS) {
-      return true;
-    }
-    return false;
-  }
-}
-
-bool updateStateRobust(int value) {
-  bool desiredState = computeDesiredState(value);
-  unsigned long now = millis();
-
-  if (desiredState == activeState) {
-    hasPendingChange = false;
-    return activeState;
-  }
-
-  if (!hasPendingChange) {
-    pendingState = desiredState;
-    pendingSince = now;
-    hasPendingChange = true;
-    return activeState;
-  }
-
-  if (pendingState != desiredState) {
-    pendingState = desiredState;
-    pendingSince = now;
-    return activeState;
-  }
-
-  if (now - pendingSince >= HOLD_MS) {
-    activeState = pendingState;
-    hasPendingChange = false;
-  }
-
-  return activeState;
-}
-
-void printStatus() {
-  int value = readStableA0();
-  bool active = updateStateRobust(value);
-
-  Serial.print("OK ");
-  Serial.print("a0=");
-  Serial.print(value);
-
-  Serial.print(" threshold=");
-  Serial.print(UMBRAL);
-
-  Serial.print(" red=");
-  Serial.print(active ? 1 : 0);
-
-  Serial.print(" green=");
-  Serial.print(active ? 1 : 0);
-
-  Serial.print(" state=");
-  Serial.print(active ? "ACTIVO" : "REPOSO");
-
-  Serial.print(" mode=ANALOG");
-  Serial.print(" input=A0");
-  Serial.print(" leds=HARDWARE");
-  Serial.print(" driver=TRANSISTOR");
-  Serial.println();
-}
-
-void handleCommand(char *cmd) {
-  for (int i = 0; cmd[i]; i++) {
-    cmd[i] = toupper(cmd[i]);
-  }
-
-  if (strcmp(cmd, "PING") == 0) {
-    Serial.println("OK pong");
-    return;
-  }
-
-  if (strcmp(cmd, "GET") == 0 || strcmp(cmd, "READ") == 0 || strcmp(cmd, "STATUS") == 0) {
-    printStatus();
-    return;
-  }
-
-  Serial.println("ERR comando_no_valido");
+String crearRespuesta() {
+  String respuesta = "{";
+  respuesta += "\"temperatura\":" + String(temperatura, 1) + ",";
+  respuesta += "\"humedad\":" + String(humedad, 1) + ",";
+  respuesta += "\"rango\":\"" + rango + "\",";
+  respuesta += "\"velocidad\":\"" + velocidad + "\",";
+  respuesta += "\"estado\":\"" + estado + "\",";
+  respuesta += "\"pwm\":" + String(pwmValue);
+  respuesta += "}";
+  return respuesta;
 }
 
 void setup() {
-  Serial.begin(115200);
-  delay(300);
-  Serial.println("OK Arduino_A0_listo");
+  Serial.begin(9600);
+  dht.begin();
+
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(ENA, 0);
 }
 
 void loop() {
-  int value = readStableA0();
-  updateStateRobust(value);
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
 
-  while (Serial.available() > 0) {
-    char c = (char)Serial.read();
+  if (!isnan(h) && !isnan(t)) {
+    humedad = h;
+    temperatura = t;
+    actualizarControl(temperatura);
+  }
 
-    if (c == '\n' || c == '\r') {
-      if (bufferIndex > 0) {
-        bufferLine[bufferIndex] = '\0';
-        handleCommand(bufferLine);
-        bufferIndex = 0;
+  while (Serial.available()) {
+    char c = Serial.read();
+
+    if (c == '\n') {
+      buffer.trim();
+
+      if (buffer == "GET_DATA") {
+        Serial.println(crearRespuesta());
       }
+
+      buffer = "";
     } else {
-      if (bufferIndex < sizeof(bufferLine) - 1) {
-        bufferLine[bufferIndex++] = c;
-      }
+      buffer += c;
+    }
+  }
+
+  delay(500);
+}
     }
   }
 }
