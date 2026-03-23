@@ -1,16 +1,21 @@
 #include <DHT.h>
 
-#define DHTPIN 2
+#define DHTPIN 7
 #define DHTTYPE DHT11
 
 DHT dht(DHTPIN, DHTTYPE);
 
 // Puente H
-const int ENA = 5;   // PWM
-const int IN1 = 8;
-const int IN2 = 9;
+const int ENA = 2;   // gris
+const int IN1 = 3;   // azul claro
+const int IN2 = 4;   // morado
 
-// Variables globales
+// Encoder
+const int encoderA = 6;   // amarillo
+const int encoderB = 5;   // verde
+
+volatile long pulsos = 0;
+
 float temperatura = 0.0;
 float humedad = 0.0;
 String rango = "";
@@ -20,19 +25,23 @@ int pwmValue = 0;
 
 String buffer = "";
 
+void contarEncoder() {
+  pulsos++;
+}
+
 void actualizarControl(float temp) {
   if (temp < 24.0) {
     rango = "Rango 1";
     velocidad = "Baja";
     estado = "Temperatura baja";
     pwmValue = 90;
-  } 
+  }
   else if (temp >= 24.0 && temp < 30.0) {
     rango = "Rango 2";
     velocidad = "Media";
     estado = "Temperatura media";
     pwmValue = 170;
-  } 
+  }
   else {
     rango = "Rango 3";
     velocidad = "Alta";
@@ -40,7 +49,6 @@ void actualizarControl(float temp) {
     pwmValue = 255;
   }
 
-  // Motor en un solo sentido
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   analogWrite(ENA, pwmValue);
@@ -53,7 +61,8 @@ String crearRespuesta() {
   respuesta += "\"rango\":\"" + rango + "\",";
   respuesta += "\"velocidad\":\"" + velocidad + "\",";
   respuesta += "\"estado\":\"" + estado + "\",";
-  respuesta += "\"pwm\":" + String(pwmValue);
+  respuesta += "\"pwm\":" + String(pwmValue) + ",";
+  respuesta += "\"pulsos\":" + String(pulsos);
   respuesta += "}";
   return respuesta;
 }
@@ -65,6 +74,11 @@ void setup() {
   pinMode(ENA, OUTPUT);
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
+
+  pinMode(encoderA, INPUT_PULLUP);
+  pinMode(encoderB, INPUT_PULLUP);
+
+  attachInterrupt(digitalPinToInterrupt(encoderA), contarEncoder, RISING);
 
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
@@ -98,7 +112,4 @@ void loop() {
   }
 
   delay(500);
-}
-    }
-  }
 }
