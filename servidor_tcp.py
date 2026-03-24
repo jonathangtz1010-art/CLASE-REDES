@@ -4,7 +4,7 @@ import time
 
 HOST = "0.0.0.0"
 PORT = 5001
-SERIAL_PORT = "COM9"
+SERIAL_PORT = "/dev/ttyACM0"
 BAUDRATE = 9600
 
 arduino = serial.Serial(SERIAL_PORT, BAUDRATE, timeout=2)
@@ -13,8 +13,11 @@ time.sleep(2)
 def leer_arduino():
     arduino.reset_input_buffer()
     arduino.write(b"GET_DATA\n")
-    respuesta = arduino.readline().decode("utf-8").strip()
-    return respuesta
+
+    while True:
+        respuesta = arduino.readline().decode("utf-8", errors="ignore").strip()
+        if respuesta.startswith("{") and respuesta.endswith("}"):
+            return respuesta
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
@@ -33,14 +36,14 @@ while True:
             respuesta = leer_arduino()
 
             if respuesta:
-                conn.sendall(respuesta.encode("utf-8"))
+                conn.sendall((respuesta + "\n").encode("utf-8"))
             else:
-                conn.sendall(b'{"error":"Sin respuesta del Arduino"}')
+                conn.sendall(b'{"error":"Sin respuesta del Arduino"}\n')
         else:
-            conn.sendall(b'{"error":"Comando no valido"}')
+            conn.sendall(b'{"error":"Comando no valido"}\n')
 
     except Exception as e:
-        mensaje = f'{{"error":"{str(e)}"}}'
+        mensaje = f'{{"error":"{str(e)}"}}\n'
         conn.sendall(mensaje.encode("utf-8"))
 
     finally:
