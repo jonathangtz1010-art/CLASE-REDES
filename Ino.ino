@@ -11,11 +11,13 @@ const int IN1 = 4;
 const int IN2 = 2;
 
 // Encoder
-const int encoderA = 6;   // amarillo
-const int encoderB = 5;   // verde
+const int encoderA = 6;
+const int encoderB = 5;
 
-volatile long pulsos = 0;
+long pulsos = 0;
+int estadoAnteriorA = 0;
 
+// Variables del sistema
 float temperatura = 0.0;
 float humedad = 0.0;
 String rango = "";
@@ -24,29 +26,32 @@ String estado = "";
 int pwmValue = 0;
 
 String buffer = "";
-
-void contarEncoder() {
-  pulsos++;
-}
+unsigned long tiempoSerial = 0;
 
 void actualizarControl(float temp) {
-  if (temp < 24.0) {
+  if (temp >= 26.0 && temp < 27.0) {
     rango = "Rango 1";
     velocidad = "Baja";
     estado = "Temperatura baja";
-    pwmValue = 90;
-  }
-  else if (temp >= 24.0 && temp < 30.0) {
+    pwmValue = 70;
+  } 
+  else if (temp >= 27.0 && temp < 28.0) {
     rango = "Rango 2";
     velocidad = "Media";
     estado = "Temperatura media";
     pwmValue = 170;
-  }
-  else {
+  } 
+  else if (temp >= 28.0) {
     rango = "Rango 3";
     velocidad = "Alta";
     estado = "Temperatura alta";
     pwmValue = 255;
+  } 
+  else {
+    rango = "Fuera de rango";
+    velocidad = "Apagado";
+    estado = "Temperatura menor a 26";
+    pwmValue = 0;
   }
 
   digitalWrite(IN1, HIGH);
@@ -78,7 +83,7 @@ void setup() {
   pinMode(encoderA, INPUT_PULLUP);
   pinMode(encoderB, INPUT_PULLUP);
 
-  attachInterrupt(digitalPinToInterrupt(encoderA), contarEncoder, RISING);
+  estadoAnteriorA = digitalRead(encoderA);
 
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
@@ -86,6 +91,15 @@ void setup() {
 }
 
 void loop() {
+  int estadoActualA = digitalRead(encoderA);
+
+  if (estadoActualA != estadoAnteriorA) {
+    if (estadoActualA == HIGH) {
+      pulsos++;
+    }
+  }
+  estadoAnteriorA = estadoActualA;
+
   float h = dht.readHumidity();
   float t = dht.readTemperature();
 
@@ -111,5 +125,22 @@ void loop() {
     }
   }
 
-  delay(500);
+  if (millis() - tiempoSerial >= 1000) {
+    tiempoSerial = millis();
+
+    Serial.print("Temp: ");
+    Serial.print(temperatura);
+    Serial.print(" C | Humedad: ");
+    Serial.print(humedad);
+    Serial.print(" % | ");
+    Serial.print(rango);
+    Serial.print(" | Velocidad: ");
+    Serial.print(velocidad);
+    Serial.print(" | PWM: ");
+    Serial.print(pwmValue);
+    Serial.print(" | Pulsos: ");
+    Serial.println(pulsos);
+  }
+
+  delay(100);
 }
