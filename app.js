@@ -7,50 +7,43 @@ const estado = document.getElementById("estado");
 const motorEstado = document.getElementById("motorEstado");
 const statusFill = document.getElementById("statusFill");
 const ultimaActualizacion = document.getElementById("ultimaActualizacion");
-
-function limpiarClases() {
-    rango.classList.remove("bajo", "medio", "alto");
-    velocidad.classList.remove("bajo", "medio", "alto");
-    estado.classList.remove("bajo", "medio", "alto");
-}
-
-function aplicarEstiloSegunRango(nombreRango) {
-    limpiarClases();
-
-    if (nombreRango === "Rango 1") {
-        rango.classList.add("bajo");
-        velocidad.classList.add("bajo");
-        estado.classList.add("bajo");
-        statusFill.style.width = "33%";
-        statusFill.style.background = "#3b82f6";
-        motorEstado.textContent = "Motor en velocidad baja";
-    } 
-    else if (nombreRango === "Rango 2") {
-        rango.classList.add("medio");
-        velocidad.classList.add("medio");
-        estado.classList.add("medio");
-        statusFill.style.width = "66%";
-        statusFill.style.background = "#f59e0b";
-        motorEstado.textContent = "Motor en velocidad media";
-    } 
-    else if (nombreRango === "Rango 3") {
-        rango.classList.add("alto");
-        velocidad.classList.add("alto");
-        estado.classList.add("alto");
-        statusFill.style.width = "100%";
-        statusFill.style.background = "#ef4444";
-        motorEstado.textContent = "Motor en velocidad alta";
-    } 
-    else {
-        statusFill.style.width = "0%";
-        statusFill.style.background = "#9ca3af";
-        motorEstado.textContent = "--";
-    }
-}
+const ultimaActualizacionTexto = document.getElementById("ultimaActualizacionTexto");
+const estadoMini = document.getElementById("estadoMini");
+const statusChip = document.getElementById("statusChip");
+const rangePill = document.getElementById("rangePill");
+const pulsos = document.getElementById("pulsos");
 
 function horaActual() {
     const ahora = new Date();
     return ahora.toLocaleTimeString();
+}
+
+function aplicarEstiloSegunRango(nombreRango) {
+    if (nombreRango === "Rango 1") {
+        statusFill.style.width = "33%";
+        statusFill.style.background = "linear-gradient(90deg, #60a5fa, #2563eb)";
+        motorEstado.textContent = "Motor en velocidad baja";
+        rangePill.textContent = "Rango 1";
+        statusChip.textContent = "Operación baja";
+    } else if (nombreRango === "Rango 2") {
+        statusFill.style.width = "66%";
+        statusFill.style.background = "linear-gradient(90deg, #fbbf24, #f59e0b)";
+        motorEstado.textContent = "Motor en velocidad media";
+        rangePill.textContent = "Rango 2";
+        statusChip.textContent = "Operación media";
+    } else if (nombreRango === "Rango 3") {
+        statusFill.style.width = "100%";
+        statusFill.style.background = "linear-gradient(90deg, #fb7185, #ef4444)";
+        motorEstado.textContent = "Motor en velocidad alta";
+        rangePill.textContent = "Rango 3";
+        statusChip.textContent = "Operación alta";
+    } else {
+        statusFill.style.width = "0%";
+        statusFill.style.background = "linear-gradient(90deg, #94a3b8, #64748b)";
+        motorEstado.textContent = "Sin lectura";
+        rangePill.textContent = "Sin lectura";
+        statusChip.textContent = "Esperando datos";
+    }
 }
 
 async function actualizarDatos() {
@@ -58,11 +51,14 @@ async function actualizarDatos() {
         const response = await fetch("/get_data");
         const data = await response.json();
 
-        if (data.error) {
+        if (!data.ok) {
             estado.textContent = "Error de comunicación";
+            estadoMini.textContent = "Sin respuesta";
             motorEstado.textContent = "Sin datos";
+            rangePill.textContent = "Error";
+            statusChip.textContent = "Error";
             statusFill.style.width = "0%";
-            statusFill.style.background = "#9ca3af";
+            statusFill.style.background = "linear-gradient(90deg, #94a3b8, #64748b)";
             return;
         }
 
@@ -72,18 +68,29 @@ async function actualizarDatos() {
         velocidad.textContent = data.velocidad;
         pwm.textContent = data.pwm;
         estado.textContent = data.estado;
+        estadoMini.textContent = data.estado;
+        pulsos.textContent = data.pulsos;
 
         aplicarEstiloSegunRango(data.rango);
-        ultimaActualizacion.textContent = "Última actualización: " + horaActual();
+
+        const hora = horaActual();
+        ultimaActualizacion.textContent = hora;
+        ultimaActualizacionTexto.textContent = hora;
 
     } catch (error) {
         estado.textContent = "Error al actualizar";
+        estadoMini.textContent = "Sin conexión";
         motorEstado.textContent = "Sin conexión";
+        rangePill.textContent = "Error";
+        statusChip.textContent = "Error";
         statusFill.style.width = "0%";
-        statusFill.style.background = "#9ca3af";
+        statusFill.style.background = "linear-gradient(90deg, #94a3b8, #64748b)";
         console.log("Error:", error);
     }
 }
+
+setInterval(actualizarDatos, 1000);
+actualizarDatos();
 
 setInterval(actualizarDatos, 1000);
 actualizarDatos();
