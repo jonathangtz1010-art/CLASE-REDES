@@ -3,9 +3,9 @@ from werkzeug.security import check_password_hash
 import socket
 import json
 
-APP_USER = "PEGA_TU_USUARIO_AQUI"
-APP_PW_HASH = "PEGA_TU_HASH_AQUI"
-SECRET_KEY = "PEGA_TU_SECRET_KEY_AQUI"
+APP_USER = "Jonathan"
+APP_PW_HASH = "scrypt:32768:8:1$mYcqeXNRnAjyLWOd$49ff9ed690c33ce7154446106cb109a3f0560558bd84838faf81502f0c541ec6eee4eb0ab1e9f011b26bce40582f6780a2154607c1198da180387f9ce15d62b1"
+SECRET_KEY = "12345"
 
 TCP_HOST = "127.0.0.1"
 TCP_PORT = 5001
