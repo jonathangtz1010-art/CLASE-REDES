@@ -3,55 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoreo del sistema</title>
+    <title>Dashboard | Sistema embebido</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="dashboard-page">
+    <div class="page-glow glow-1"></div>
+    <div class="page-glow glow-2"></div>
+
     <header class="topbar">
-        <h1>Sistema embebido con DHT11 y motor DC</h1>
-        <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
+        <div class="topbar-left">
+            <div class="topbar-logo">SE</div>
+            <div>
+                <h1>Dashboard del sistema embebido</h1>
+                <p>Lectura del DHT11 y control automático de motor DC</p>
+            </div>
+        </div>
+
+        <div class="topbar-right">
+            <div class="status-chip" id="statusChip">Sistema activo</div>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
+        </div>
     </header>
 
-    <main class="container">
-        <div class="card">
-            <h2>Temperatura</h2>
-            <p id="temperatura" class="value">-- °C</p>
-        </div>
-
-        <div class="card">
-            <h2>Humedad</h2>
-            <p id="humedad" class="value">-- %</p>
-        </div>
-
-        <div class="card">
-            <h2>Rango activo</h2>
-            <p id="rango" class="value">--</p>
-        </div>
-
-        <div class="card">
-            <h2>Velocidad</h2>
-            <p id="velocidad" class="value">--</p>
-        </div>
-
-        <div class="card">
-            <h2>PWM</h2>
-            <p id="pwm" class="value">--</p>
-        </div>
-
-        <div class="card">
-            <h2>Estado del motor</h2>
-            <p id="motorEstado" class="value">--</p>
-        </div>
-
-        <div class="card full">
-            <h2>Estado general del sistema</h2>
-            <p id="estado" class="value">--</p>
-            <div class="status-bar">
-                <div id="statusFill" class="status-fill"></div>
+    <main class="dashboard-container">
+        <section class="hero-panel">
+            <div class="hero-text">
+                <span class="hero-tag">MONITOREO EN TIEMPO REAL</span>
+                <h2>Control del motor basado en temperatura</h2>
+                <p>
+                    El sistema lee la temperatura con el DHT11 y ajusta la velocidad del motor
+                    en tres niveles mediante PWM, mostrando el estado actual en la interfaz web.
+                </p>
             </div>
-            <p id="ultimaActualizacion" class="update-text">Última actualización: --</p>
-        </div>
+
+            <div class="hero-summary">
+                <div class="summary-box">
+                    <span>Última lectura</span>
+                    <strong id="ultimaActualizacion">--</strong>
+                </div>
+                <div class="summary-box">
+                    <span>Estado del sistema</span>
+                    <strong id="estadoMini">--</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="cards-grid">
+            <article class="data-card accent-blue">
+                <div class="card-top">
+                    <span class="card-label">Temperatura</span>
+                    <span class="card-icon">🌡️</span>
+                </div>
+                <h3 id="temperatura" class="card-value">-- °C</h3>
+                <p class="card-footer">Sensor DHT11</p>
+            </article>
+
+            <article class="data-card accent-cyan">
+                <div class="card-top">
+                    <span class="card-label">Humedad</span>
+                    <span class="card-icon">💧</span>
+                </div>
+                <h3 id="humedad" class="card-value">-- %</h3>
+                <p class="card-footer">Lectura actual</p>
+            </article>
+
+            <article class="data-card accent-violet">
+                <div class="card-top">
+                    <span class="card-label">Rango activo</span>
+                    <span class="card-icon">📊</span>
+                </div>
+                <h3 id="rango" class="card-value">--</h3>
+                <p class="card-footer">Clasificación térmica</p>
+            </article>
+
+            <article class="data-card accent-green">
+                <div class="card-top">
+                    <span class="card-label">Velocidad</span>
+                    <span class="card-icon">⚙️</span>
+                </div>
+                <h3 id="velocidad" class="card-value">--</h3>
+                <p class="card-footer">Nivel del motor</p>
+            </article>
+
+            <article class="data-card accent-orange">
+                <div class="card-top">
+                    <span class="card-label">PWM</span>
+                    <span class="card-icon">🔋</span>
+                </div>
+                <h3 id="pwm" class="card-value">--</h3>
+                <p class="card-footer">Señal aplicada</p>
+            </article>
+
+            <article class="data-card accent-red">
+                <div class="card-top">
+                    <span class="card-label">Estado del motor</span>
+                    <span class="card-icon">🛞</span>
+                </div>
+                <h3 id="motorEstado" class="card-value motor-text">--</h3>
+                <p class="card-footer">Respuesta del sistema</p>
+            </article>
+        </section>
+
+        <section class="main-status-card">
+            <div class="status-header">
+                <div>
+                    <span class="section-tag">ESTADO GENERAL</span>
+                    <h2 id="estado">--</h2>
+                </div>
+                <div class="range-pill" id="rangePill">Sin lectura</div>
+            </div>
+
+            <div class="progress-wrap">
+                <div class="progress-track">
+                    <div class="progress-fill" id="statusFill"></div>
+                </div>
+                <div class="progress-labels">
+                    <span>Bajo</span>
+                    <span>Medio</span>
+                    <span>Alto</span>
+                </div>
+            </div>
+
+            <div class="extra-info">
+                <div class="info-box">
+                    <span>Pulsos del encoder</span>
+                    <strong id="pulsos">--</strong>
+                </div>
+                <div class="info-box">
+                    <span>Actualización</span>
+                    <strong id="ultimaActualizacionTexto">--</strong>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
 
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
