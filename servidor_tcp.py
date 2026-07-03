@@ -16,11 +16,15 @@ BAUD = 9600
 SERIAL_PORT = "/dev/ttyACM0"
 
 _running = True
-_lock = threading.Lock()
+
+state_lock = threading.Lock()
+serial_lock = threading.Lock()
+
+ser = None
 
 estado_sistema = {
     "ok": True,
-    "estado": "Esperando datos del Arduino",
+    "estado": "Esperando conexion con Arduino",
     "color": "DESCONOCIDO",
     "posicion": 0,
     "setpoint": 0,
@@ -43,34 +47,71 @@ def handle_sig(*_):
     _running = False
 
 
-def open_serial():
-    ser = serial.Serial(SERIAL_PORT, BAUD, timeout=1)
-    time.sleep(2.0)
-    ser.reset_input_buffer()
-    ser.reset_output_buffer()
-    print(f"[SERIAL] Conectado a {SERIAL_PORT} @ {BAUD}")
-    return ser
-
-
 def normalizar_color(color):
     color = color.strip().upper()
 
     if color == "ROJO":
         return "ROJO"
-
     if color == "VERDE":
         return "VERDE"
-
     if color == "AZUL":
         return "AZUL"
-
     if color == "NEGRO":
         return "NEGRO"
-
     if color == "SIN PIEZA":
         return "SIN_PIEZA"
 
     return "DESCONOCIDO"
+
+
+def set_estado(texto):
+    with state_lock:
+        estado_sistema["estado"] = texto
+
+
+def abrir_serial():
+    global ser
+
+    try:
+        nuevo = serial.Serial(SERIAL_PORT, BAUD, timeout=0.3)
+        time.sleep(2.0)
+        nuevo.reset_input_buffer()
+        nuevo.reset_output_buffer()
+
+        with serial_lock:
+            ser = nuevo
+
+        print(f"[SERIAL] Conectado a {SERIAL_PORT} @ {BAUD}")
+
+        with state_lock:
+            estado_sistema["estado"] = "Arduino conectado"
+            estado_sistema["motor"] = "DETENIDO"
+            estado_sistema["servo"] = "REPOSO"
+
+        return True
+
+    except Exception as e:
+        print(f"[SERIAL] No conectado: {e}")
+
+        with state_lock:
+            estado_sistema["estado"] = "Arduino no conectado"
+            estado_sistema["motor"] = "DETENIDO"
+            estado_sistema["servo"] = "REPOSO"
+
+        return False
+
+
+def cerrar_serial():
+    global ser
+
+    with serial_lock:
+        try:
+            if ser:
+                ser.close()
+        except Exception:
+            pass
+
+        ser = None
 
 
 def sumar_color(color):
@@ -78,24 +119,19 @@ def sumar_color(color):
 
     if color == "ROJO":
         estado_sistema["contadores"]["rojo"] += 1
-
     elif color == "VERDE":
         estado_sistema["contadores"]["verde"] += 1
-
     elif color == "AZUL":
         estado_sistema["contadores"]["azul"] += 1
-
     elif color == "NEGRO":
         estado_sistema["contadores"]["negro"] += 1
 
-    total = (
+    estado_sistema["contadores"]["total"] = (
         estado_sistema["contadores"]["rojo"] +
         estado_sistema["contadores"]["verde"] +
         estado_sistema["contadores"]["azul"] +
         estado_sistema["contadores"]["negro"]
     )
-
-    estado_sistema["contadores"]["total"] = total
 
 
 def limpiar_contadores():
@@ -125,7 +161,7 @@ def procesar_linea_arduino(linea):
 
     print(f"[ARDUINO] {linea}")
 
-    with _lock:
+    with state_lock:
 
         if "CLASIFICADOR AUTOMATICO INICIADO" in linea:
             estado_sistema["estado"] = "Clasificador iniciado"
@@ -146,10 +182,8 @@ def procesar_linea_arduino(linea):
 
                 if color == "SIN_PIEZA":
                     estado_sistema["estado"] = "Esperando pieza"
-
                 elif color == "DESCONOCIDO":
                     estado_sistema["estado"] = "Color desconocido"
-
                 else:
                     estado_sistema["estado"] = f"Detectando color {color}"
 
@@ -187,7 +221,6 @@ def procesar_linea_arduino(linea):
 
         if linea.startswith("Posicion:"):
             patron = r"Posicion:\s*(-?\d+)\s*\|\s*Destino:\s*(-?\d+)\s*\|\s*PWM:\s*(-?\d+)"
-
             m = re.search(patron, linea)
 
             if m:
@@ -267,79 +300,103 @@ def procesar_linea_arduino(linea):
             return
 
 
-def hilo_lectura_serial(ser):
-    global _running
+def hilo_lectura_serial():
+    global ser
 
     while _running:
+
+        if ser is None:
+            abrir_serial()
+            time.sleep(2)
+            continue
+
         try:
-            linea = ser.readline().decode("utf-8", errors="ignore").strip()
+            with serial_lock:
+                actual = ser
+
+                if actual is None:
+                    continue
+
+                linea = actual.readline().decode("utf-8", errors="ignore").strip()
 
             if linea:
                 procesar_linea_arduino(linea)
 
         except Exception as e:
             print(f"[SERIAL ERROR] {e}")
-            time.sleep(0.5)
+            cerrar_serial()
+            time.sleep(2)
 
 
-def enviar_a_arduino(ser, cmd):
+def enviar_a_arduino(cmd):
+    global ser
+
+    if ser is None:
+        return "ERR Arduino no conectado"
+
     try:
-        ser.write((cmd.strip() + "\n").encode("utf-8"))
-        ser.flush()
+        with serial_lock:
+            if ser is None:
+                return "ERR Arduino no conectado"
+
+            ser.write((cmd.strip() + "\n").encode("utf-8"))
+            ser.flush()
+
         return "OK comando enviado al Arduino"
 
     except Exception as e:
+        cerrar_serial()
         return f"ERR {e}"
 
 
 def obtener_status_json():
-    with _lock:
+    with state_lock:
         copia = json.loads(json.dumps(estado_sistema))
 
     return json.dumps(copia, ensure_ascii=False)
 
 
-def procesar_comando_tcp(ser, msg):
+def procesar_comando_tcp(msg):
     msg = msg.strip().upper()
 
     if msg == "STATUS":
         return obtener_status_json()
 
     if msg == "START":
-        with _lock:
+        with state_lock:
             estado_sistema["estado"] = "Sistema iniciado desde interfaz"
             estado_sistema["motor"] = "DETENIDO"
             estado_sistema["servo"] = "REPOSO"
 
-        enviar_a_arduino(ser, "START")
+        enviar_a_arduino("START")
         return "OK START"
 
     if msg == "RESET":
-        with _lock:
+        with state_lock:
             reiniciar_estado()
 
-        enviar_a_arduino(ser, "RESET")
+        enviar_a_arduino("RESET")
         return "OK RESET"
 
     if msg == "EMERGENCY":
-        with _lock:
+        with state_lock:
             estado_sistema["estado"] = "PARO DE EMERGENCIA ACTIVADO"
             estado_sistema["motor"] = "DETENIDO"
             estado_sistema["servo"] = "REPOSO"
             estado_sistema["pwm"] = 0
 
-        enviar_a_arduino(ser, "EMERGENCY")
+        enviar_a_arduino("EMERGENCY")
         return "OK EMERGENCY"
 
     if msg == "CLEAR_COUNTERS":
-        with _lock:
+        with state_lock:
             limpiar_contadores()
             estado_sistema["estado"] = "Contadores reiniciados"
 
-        enviar_a_arduino(ser, "CLEAR_COUNTERS")
+        enviar_a_arduino("CLEAR_COUNTERS")
         return "OK CLEAR_COUNTERS"
 
-    enviar_a_arduino(ser, msg)
+    enviar_a_arduino(msg)
     return f"OK comando reenviado: {msg}"
 
 
@@ -349,11 +406,8 @@ def main():
     signal.signal(signal.SIGINT, handle_sig)
     signal.signal(signal.SIGTERM, handle_sig)
 
-    ser = open_serial()
-
     t = threading.Thread(
         target=hilo_lectura_serial,
-        args=(ser,),
         daemon=True
     )
 
@@ -399,17 +453,13 @@ def main():
                     continue
 
                 try:
-                    resp = procesar_comando_tcp(ser, msg)
+                    resp = procesar_comando_tcp(msg)
                     conn.sendall((resp + "\n").encode("utf-8"))
 
                 except Exception as e:
                     conn.sendall((f"ERR {e}\n").encode("utf-8"))
 
-    try:
-        ser.close()
-    except Exception:
-        pass
-
+    cerrar_serial()
     print("Cerrado limpio.")
 
 
