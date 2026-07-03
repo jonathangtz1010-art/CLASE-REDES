@@ -117,14 +117,14 @@ const int ROJO_G_MAX = 190;
 const int ROJO_B_MIN = 150;
 const int ROJO_B_MAX = 160;
 
-const int VERDE_R_MIN = 140;
-const int VERDE_R_MAX = 150;
+const int VERDE_R_MIN = 170;
+const int VERDE_R_MAX = 180;
 
-const int VERDE_G_MIN = 110;
-const int VERDE_G_MAX = 120;
+const int VERDE_G_MIN = 120;
+const int VERDE_G_MAX = 130;
 
-const int VERDE_B_MIN = 110;
-const int VERDE_B_MAX = 115;
+const int VERDE_B_MIN = 120;
+const int VERDE_B_MAX = 130;
 
 const int AZUL_R_MIN = 170;
 const int AZUL_R_MAX = 200;
@@ -1103,3 +1103,4 @@ const char* nombreColor(TipoColor color) {
       return "DESCONOCIDO";
   }
 }
+
