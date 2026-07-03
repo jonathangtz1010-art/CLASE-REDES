@@ -287,6 +287,7 @@ def enviar_a_arduino(ser, cmd):
         ser.write((cmd.strip() + "\n").encode("utf-8"))
         ser.flush()
         return "OK comando enviado al Arduino"
+
     except Exception as e:
         return f"ERR {e}"
 
@@ -398,9 +399,7 @@ def main():
                     continue
 
                 try:
-                    with _lock:
-                        resp = procesar_comando_tcp(ser, msg)
-
+                    resp = procesar_comando_tcp(ser, msg)
                     conn.sendall((resp + "\n").encode("utf-8"))
 
                 except Exception as e:
