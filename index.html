@@ -12,24 +12,62 @@
 
     <header class="top">
       <div>
-        <h1>Panel de Operador - Clasificador de Colores</h1>
+        <h1>⚙️ Panel de Operador - Clasificador de Colores</h1>
         <p class="hint">
-          Sistema automático con sensor de color, motor con encoder, servo y paro de emergencia.
+          Sistema automático con sensor de color, motor con encoder, servo expulsor y paro de emergencia.
         </p>
       </div>
 
-      <div style="display:flex; gap:10px; align-items:center;">
+      <div class="topRight">
+        <div class="clockBox" id="liveClock">--:--:--</div>
         <div class="status" id="status">Cargando sistema...</div>
-        <a class="btn" href="/logout" style="text-decoration:none; text-align:center;">Salir</a>
+        <a class="btn btnSmall" href="/logout">Salir</a>
       </div>
     </header>
 
+    <section class="kpiGrid">
+      <div class="kpiCard">
+        <div class="kpiIcon">📦</div>
+        <div>
+          <span>Piezas totales</span>
+          <strong id="totalCount">0</strong>
+        </div>
+      </div>
+
+      <div class="kpiCard">
+        <div class="kpiIcon">🎯</div>
+        <div>
+          <span>Meta de producción</span>
+          <strong>30</strong>
+        </div>
+      </div>
+
+      <div class="kpiCard">
+        <div class="kpiIcon">🧠</div>
+        <div>
+          <span>Modo de trabajo</span>
+          <strong id="productionMode">Automático</strong>
+        </div>
+      </div>
+
+      <div class="kpiCard">
+        <div class="kpiIcon">🔌</div>
+        <div>
+          <span>Conexión</span>
+          <strong id="connectionState">Servidor</strong>
+        </div>
+      </div>
+    </section>
+
     <section class="dashboard">
 
-      <div>
+      <div class="leftColumn">
 
-        <section class="panel">
-          <h2>Color detectado</h2>
+        <section class="panel colorPanel">
+          <div class="panelHeader">
+            <h2>🎨 Color detectado</h2>
+            <span id="qualityState" class="miniBadge">Lectura activa</span>
+          </div>
 
           <div class="mainColor">
             <div>
@@ -51,104 +89,182 @@
           </div>
         </section>
 
-        <section class="panel" style="margin-top:16px;">
-          <h2>Contadores por color</h2>
+        <section class="panel">
+          <div class="panelHeader">
+            <h2>📊 Contadores por color</h2>
+            <span class="miniBadge">Conteo independiente</span>
+          </div>
 
           <div class="counterGrid">
             <div class="counter red">
-              <div class="dot"></div>
+              <div class="counterIcon">🔴</div>
               <span>Rojo</span>
               <strong id="redCount">0</strong>
             </div>
 
             <div class="counter green">
-              <div class="dot"></div>
+              <div class="counterIcon">🟢</div>
               <span>Verde</span>
               <strong id="greenCount">0</strong>
             </div>
 
             <div class="counter blue">
-              <div class="dot"></div>
+              <div class="counterIcon">🔵</div>
               <span>Azul</span>
               <strong id="blueCount">0</strong>
             </div>
 
             <div class="counter black">
-              <div class="dot"></div>
+              <div class="counterIcon">⚫</div>
               <span>Negro</span>
               <strong id="blackCount">0</strong>
             </div>
           </div>
+        </section>
 
-          <div class="totalBox">
-            <span>Total de piezas clasificadas</span>
-            <strong id="totalCount">0</strong>
+        <section class="panel">
+          <div class="panelHeader">
+            <h2>🔄 Flujo del proceso</h2>
+            <span class="miniBadge">Secuencia automática</span>
+          </div>
+
+          <div class="processFlow">
+            <div class="step active">
+              <div>👁️</div>
+              <span>Sensor lee color</span>
+            </div>
+
+            <div class="arrow">➜</div>
+
+            <div class="step">
+              <div>🧮</div>
+              <span>Clasificación</span>
+            </div>
+
+            <div class="arrow">➜</div>
+
+            <div class="step">
+              <div>⚙️</div>
+              <span>Motor a setpoint</span>
+            </div>
+
+            <div class="arrow">➜</div>
+
+            <div class="step">
+              <div>🦾</div>
+              <span>Servo expulsa</span>
+            </div>
+
+            <div class="arrow">➜</div>
+
+            <div class="step">
+              <div>🏁</div>
+              <span>Regresa a cero</span>
+            </div>
           </div>
         </section>
 
       </div>
 
-      <div>
+      <div class="rightColumn">
 
         <section class="panel">
-          <h2>Control del sistema</h2>
+          <div class="panelHeader">
+            <h2>🕹️ Control del sistema</h2>
+            <span class="miniBadge">Operador</span>
+          </div>
 
           <div class="controls">
-            <button id="btnStart" class="btn start">Iniciar sistema</button>
+            <button id="btnStart" class="btn start">▶️ Iniciar sistema</button>
 
             <div class="buttonGrid">
-              <button id="btnReset" class="btn reset">Reiniciar desde cero</button>
-              <button id="btnClearCounters" class="btn">Limpiar contadores</button>
+              <button id="btnReset" class="btn reset">🔁 Reiniciar desde cero</button>
+              <button id="btnClearCounters" class="btn">🧹 Limpiar contadores</button>
             </div>
 
             <button id="btnEmergency" class="btn emergency">
-              PARO DE EMERGENCIA
+              ⛔ PARO DE EMERGENCIA
             </button>
           </div>
 
           <p class="hint">
-            El reinicio debe regresar el sistema al centro, limpiar estado y dejarlo listo para una nueva corrida.
+            El paro detiene el motor. El reinicio regresa el sistema al centro y deja listo el proceso.
           </p>
         </section>
 
-        <section class="panel" style="margin-top:16px;">
-          <h2>Datos técnicos</h2>
+        <section class="panel">
+          <div class="panelHeader">
+            <h2>🧩 Datos técnicos</h2>
+            <span class="miniBadge">Arduino / PID</span>
+          </div>
 
           <div class="dataGrid">
             <div class="dataItem">
-              <span>Posición encoder</span>
+              <span>📍 Posición encoder</span>
               <strong id="posicion">0</strong>
             </div>
 
             <div class="dataItem">
-              <span>Setpoint</span>
+              <span>🎯 Setpoint</span>
               <strong id="setpoint">0</strong>
             </div>
 
             <div class="dataItem">
-              <span>PWM motor</span>
+              <span>⚡ PWM motor</span>
               <strong id="pwm">0</strong>
             </div>
 
             <div class="dataItem">
-              <span>Estado motor</span>
+              <span>⚙️ Estado motor</span>
               <strong id="motorState">DETENIDO</strong>
             </div>
 
             <div class="dataItem">
-              <span>Estado servo</span>
+              <span>🦾 Estado servo</span>
               <strong id="servoState">REPOSO</strong>
             </div>
 
             <div class="dataItem">
-              <span>Meta</span>
+              <span>🏁 Meta</span>
               <strong>30 piezas</strong>
             </div>
           </div>
         </section>
 
-        <section class="panel" style="margin-top:16px;">
-          <h2>Registro del sistema</h2>
+        <section class="panel">
+          <div class="panelHeader">
+            <h2>🧪 Estado de colores</h2>
+            <span class="miniBadge">Setpoints</span>
+          </div>
+
+          <div class="colorRouteGrid">
+            <div class="route redRoute">
+              <span>🔴 Rojo</span>
+              <strong>-900</strong>
+            </div>
+
+            <div class="route greenRoute">
+              <span>🟢 Verde</span>
+              <strong>0</strong>
+            </div>
+
+            <div class="route blueRoute">
+              <span>🔵 Azul</span>
+              <strong>900</strong>
+            </div>
+
+            <div class="route blackRoute">
+              <span>⚫ Negro</span>
+              <strong>-900</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panelHeader">
+            <h2>📝 Registro del sistema</h2>
+            <span class="miniBadge">Eventos</span>
+          </div>
 
           <div id="logBox" class="logBox">
             <p>[Sistema] Esperando conexión...</p>
