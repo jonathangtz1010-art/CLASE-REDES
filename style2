@@ -284,14 +284,17 @@ body::before {
   background: var(--red);
   box-shadow: 0 0 50px rgba(255, 59, 92, 0.5);
 }
+
 .colorCircle.green {
   background: var(--green);
   box-shadow: 0 0 50px rgba(42, 230, 142, 0.45);
 }
+
 .colorCircle.blue {
   background: var(--blue);
   box-shadow: 0 0 50px rgba(74, 139, 255, 0.5);
 }
+
 .colorCircle.black {
   background: #0a0a0a;
   box-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
@@ -382,12 +385,15 @@ body::before {
 .counter.red {
   border-color: rgba(255, 59, 92, 0.25);
 }
+
 .counter.green {
   border-color: rgba(42, 230, 142, 0.25);
 }
+
 .counter.blue {
   border-color: rgba(74, 139, 255, 0.25);
 }
+
 .counter.black {
   border-color: rgba(255, 255, 255, 0.10);
 }
@@ -547,12 +553,15 @@ body::before {
 .redRoute {
   border-color: rgba(255, 59, 92, 0.2);
 }
+
 .greenRoute {
   border-color: rgba(42, 230, 142, 0.2);
 }
+
 .blueRoute {
   border-color: rgba(74, 139, 255, 0.2);
 }
+
 .blackRoute {
   border-color: rgba(255, 255, 255, 0.08);
 }
@@ -573,6 +582,172 @@ body::before {
 
 .logBox p {
   margin: 0 0 6px;
+}
+
+/* ============================================================
+   LOGIN - Acceso de operador
+   ============================================================ */
+
+.loginBody {
+  min-height: 100vh;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginCard {
+  width: min(520px, 100%);
+  background: var(--bg-panel);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: var(--shadow-heavy), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  position: relative;
+  z-index: 2;
+}
+
+.loginHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.loginHeader h1 {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: var(--text-primary);
+}
+
+.loginHeader p {
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.loginBadge {
+  padding: 8px 14px;
+  border-radius: 40px;
+  border: 1px solid rgba(250, 204, 21, 0.45);
+  background: rgba(250, 204, 21, 0.08);
+  color: #facc15;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.loginBox,
+.projectBox {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.loginBox h2,
+.projectBox h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  color: var(--text-primary);
+}
+
+.loginForm {
+  display: grid;
+  gap: 10px;
+}
+
+.loginForm label {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.loginForm input {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(106, 240, 255, 0.18);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.loginForm input::placeholder {
+  color: rgba(145, 169, 212, 0.65);
+}
+
+.loginForm input:focus {
+  border-color: rgba(106, 240, 255, 0.55);
+  background: rgba(106, 240, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(106, 240, 255, 0.08);
+}
+
+.loginButton {
+  width: 100%;
+  height: 48px;
+  margin-top: 8px;
+  border: 1px solid rgba(42, 230, 142, 0.35);
+  border-radius: 14px;
+  background: rgba(42, 230, 142, 0.13);
+  color: #b3ffd8;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.loginButton:hover {
+  background: rgba(42, 230, 142, 0.22);
+  border-color: rgba(42, 230, 142, 0.65);
+  box-shadow: 0 0 24px rgba(42, 230, 142, 0.12);
+}
+
+.loginHelp {
+  margin-top: 14px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.projectBox {
+  margin-top: 16px;
+}
+
+.projectGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.projectItem {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.projectItem span {
+  display: block;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.projectItem strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-primary);
+  font-size: 20px;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -623,16 +798,34 @@ body::before {
   .colorName {
     font-size: 26px;
   }
+
+  .loginCard {
+    padding: 18px;
+  }
+
+  .loginHeader {
+    flex-direction: column;
+  }
+
+  .projectGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .loginHeader h1 {
+    font-size: 26px;
+  }
 }
 
 /* scrollbar personalizada */
 .logBox::-webkit-scrollbar {
   width: 5px;
 }
+
 .logBox::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.02);
   border-radius: 10px;
 }
+
 .logBox::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
