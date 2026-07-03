@@ -284,14 +284,17 @@ body::before {
   background: var(--red);
   box-shadow: 0 0 50px rgba(255, 59, 92, 0.5);
 }
+
 .colorCircle.green {
   background: var(--green);
   box-shadow: 0 0 50px rgba(42, 230, 142, 0.45);
 }
+
 .colorCircle.blue {
   background: var(--blue);
   box-shadow: 0 0 50px rgba(74, 139, 255, 0.5);
 }
+
 .colorCircle.black {
   background: #0a0a0a;
   box-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
@@ -382,12 +385,15 @@ body::before {
 .counter.red {
   border-color: rgba(255, 59, 92, 0.25);
 }
+
 .counter.green {
   border-color: rgba(42, 230, 142, 0.25);
 }
+
 .counter.blue {
   border-color: rgba(74, 139, 255, 0.25);
 }
+
 .counter.black {
   border-color: rgba(255, 255, 255, 0.10);
 }
@@ -518,45 +524,6 @@ body::before {
   margin-top: 4px;
 }
 
-/* ===== ROUTE / SETPOINTS ===== */
-.colorRouteGrid {
-  display: grid;
-  gap: 8px;
-}
-
-.route {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 10px 16px;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.route span {
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.route strong {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.redRoute {
-  border-color: rgba(255, 59, 92, 0.2);
-}
-.greenRoute {
-  border-color: rgba(42, 230, 142, 0.2);
-}
-.blueRoute {
-  border-color: rgba(74, 139, 255, 0.2);
-}
-.blackRoute {
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
 /* ===== LOG ===== */
 .logBox {
   height: 170px;
@@ -629,10 +596,12 @@ body::before {
 .logBox::-webkit-scrollbar {
   width: 5px;
 }
+
 .logBox::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.02);
   border-radius: 10px;
 }
+
 .logBox::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
