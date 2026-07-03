@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clasificador de Colores</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+
+<body>
+  <main class="card">
+
+    <header class="top">
+      <div>
+        <h1>Panel de Operador - Clasificador de Colores</h1>
+        <p class="hint">
+          Sistema automático con sensor de color, motor con encoder, servo y paro de emergencia.
+        </p>
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center;">
+        <div class="status" id="status">Cargando sistema...</div>
+        <a class="btn" href="/logout" style="text-decoration:none; text-align:center;">Salir</a>
+      </div>
+    </header>
+
+    <section class="dashboard">
+
+      <div>
+
+        <section class="panel">
+          <h2>Color detectado</h2>
+
+          <div class="mainColor">
+            <div>
+              <div id="colorCircle" class="colorCircle"></div>
+              <div id="colorName" class="colorName">DESCONOCIDO</div>
+              <div id="colorSub" class="colorSub">Esperando lectura del sensor</div>
+            </div>
+          </div>
+
+          <div class="progressBox">
+            <div class="progressHeader">
+              <span>Avance de producción</span>
+              <strong id="progressText">0/30 piezas</strong>
+            </div>
+
+            <div class="progressBar">
+              <div id="progressFill" class="progressFill"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" style="margin-top:16px;">
+          <h2>Contadores por color</h2>
+
+          <div class="counterGrid">
+            <div class="counter red">
+              <div class="dot"></div>
+              <span>Rojo</span>
+              <strong id="redCount">0</strong>
+            </div>
+
+            <div class="counter green">
+              <div class="dot"></div>
+              <span>Verde</span>
+              <strong id="greenCount">0</strong>
+            </div>
+
+            <div class="counter blue">
+              <div class="dot"></div>
+              <span>Azul</span>
+              <strong id="blueCount">0</strong>
+            </div>
+
+            <div class="counter black">
+              <div class="dot"></div>
+              <span>Negro</span>
+              <strong id="blackCount">0</strong>
+            </div>
+          </div>
+
+          <div class="totalBox">
+            <span>Total de piezas clasificadas</span>
+            <strong id="totalCount">0</strong>
+          </div>
+        </section>
+
+      </div>
+
+      <div>
+
+        <section class="panel">
+          <h2>Control del sistema</h2>
+
+          <div class="controls">
+            <button id="btnStart" class="btn start">Iniciar sistema</button>
+
+            <div class="buttonGrid">
+              <button id="btnReset" class="btn reset">Reiniciar desde cero</button>
+              <button id="btnClearCounters" class="btn">Limpiar contadores</button>
+            </div>
+
+            <button id="btnEmergency" class="btn emergency">
+              PARO DE EMERGENCIA
+            </button>
+          </div>
+
+          <p class="hint">
+            El reinicio debe regresar el sistema al centro, limpiar estado y dejarlo listo para una nueva corrida.
+          </p>
+        </section>
+
+        <section class="panel" style="margin-top:16px;">
+          <h2>Datos técnicos</h2>
+
+          <div class="dataGrid">
+            <div class="dataItem">
+              <span>Posición encoder</span>
+              <strong id="posicion">0</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>Setpoint</span>
+              <strong id="setpoint">0</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>PWM motor</span>
+              <strong id="pwm">0</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>Estado motor</span>
+              <strong id="motorState">DETENIDO</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>Estado servo</span>
+              <strong id="servoState">REPOSO</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>Meta</span>
+              <strong>30 piezas</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" style="margin-top:16px;">
+          <h2>Registro del sistema</h2>
+
+          <div id="logBox" class="logBox">
+            <p>[Sistema] Esperando conexión...</p>
+          </div>
+        </section>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
