@@ -3,88 +3,79 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Acceso - Clasificador de Colores</title>
+  <title>Acceso de Operador</title>
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 
-<body>
-  <main class="card loginBox">
+<body class="loginBody">
 
-    <header class="top">
+  <main class="loginCard">
+
+    <div class="loginHeader">
       <div>
         <h1>Acceso de Operador</h1>
-        <p class="hint">
-          Panel del clasificador automático de colores.
-        </p>
+        <p>Panel del clasificador automático de colores.</p>
       </div>
 
-      <div class="status warning">Sistema protegido</div>
-    </header>
+      <span class="loginBadge">Sistema protegido</span>
+    </div>
 
-    <section class="panel">
+    <section class="loginBox">
       <h2>Iniciar sesión</h2>
 
-      <form method="POST" action="/login" class="controls">
+      <form method="POST" action="/login" class="loginForm">
 
-        <div class="row">
-          <label for="username">Usuario</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            placeholder="Ingresa tu usuario"
-            required
-          />
-        </div>
+        <label for="usuario">Usuario</label>
+        <input
+          type="text"
+          id="usuario"
+          name="usuario"
+          placeholder="Ingresa tu usuario"
+          autocomplete="username"
+          required
+        />
 
-        <div class="row">
-          <label for="password">Contraseña</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="Ingresa tu contraseña"
-            required
-          />
-        </div>
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Ingresa tu contraseña"
+          autocomplete="current-password"
+          required
+        />
 
-        <button class="btn start" type="submit">
+        <button type="submit" class="loginButton">
           Entrar al sistema
         </button>
 
-        {% if error %}
-          <p class="hint" style="color:#ffb3b3;">
-            {{ error }}
-          </p>
-        {% else %}
-          <p class="hint">
-            Ingresa tus credenciales para acceder al panel de operación.
-          </p>
-        {% endif %}
-
       </form>
+
+      <p class="loginHelp">
+        Ingresa tus credenciales para acceder al panel de operación.
+      </p>
     </section>
 
-    <section class="panel" style="margin-top:16px;">
+    <section class="projectBox">
       <h2>Proyecto</h2>
 
-      <div class="dataGrid">
-        <div class="dataItem">
+      <div class="projectGrid">
+        <div class="projectItem">
           <span>Sistema</span>
           <strong>Clasificador</strong>
         </div>
 
-        <div class="dataItem">
+        <div class="projectItem">
           <span>Colores</span>
           <strong>4</strong>
         </div>
 
-        <div class="dataItem">
+        <div class="projectItem">
           <span>Meta</span>
           <strong>30 piezas</strong>
         </div>
 
-        <div class="dataItem">
+        <div class="projectItem">
           <span>Modo</span>
           <strong>Operador</strong>
         </div>
@@ -92,5 +83,6 @@
     </section>
 
   </main>
+
 </body>
 </html>
