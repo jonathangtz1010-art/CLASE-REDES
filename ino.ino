@@ -135,14 +135,14 @@ const int AZUL_G_MAX = 170;
 const int AZUL_B_MIN = 90;
 const int AZUL_B_MAX = 115;
 
-const int NEGRO_R_MIN = 220;
-const int NEGRO_R_MAX = 230;
+const int NEGRO_R_MIN = 170;
+const int NEGRO_R_MAX = 200;
 
-const int NEGRO_G_MIN = 200;
-const int NEGRO_G_MAX = 215;
+const int NEGRO_G_MIN = 170;
+const int NEGRO_G_MAX = 180;
 
-const int NEGRO_B_MIN = 160;
-const int NEGRO_B_MAX = 180;
+const int NEGRO_B_MIN = 150;
+const int NEGRO_B_MAX = 160;
 
 enum TipoColor {
   COLOR_DESCONOCIDO,
