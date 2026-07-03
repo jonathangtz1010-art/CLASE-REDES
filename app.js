@@ -26,11 +26,24 @@ const btnReset = document.getElementById("btnReset");
 const btnEmergency = document.getElementById("btnEmergency");
 const btnClearCounters = document.getElementById("btnClearCounters");
 
+const liveClock = document.getElementById("liveClock");
+const productionMode = document.getElementById("productionMode");
+const connectionState = document.getElementById("connectionState");
+const qualityState = document.getElementById("qualityState");
+
 const META_PIEZAS = 30;
 
 let ultimoEstado = "";
 let ultimoColor = "";
 let ultimoTotal = -1;
+
+function actualizarReloj() {
+  if (!liveClock) return;
+  liveClock.textContent = new Date().toLocaleTimeString();
+}
+
+setInterval(actualizarReloj, 1000);
+actualizarReloj();
 
 function setStatus(texto, tipo = "") {
   if (!statusEl) return;
@@ -53,7 +66,7 @@ function escribirLog(texto) {
 
   logBox.prepend(p);
 
-  while (logBox.children.length > 40) {
+  while (logBox.children.length > 45) {
     logBox.removeChild(logBox.lastChild);
   }
 }
@@ -107,10 +120,13 @@ function actualizarColor(color) {
 
   if (colorNormal === "SIN_PIEZA") {
     colorSub.textContent = "Esperando pieza en el sensor";
+    if (qualityState) qualityState.textContent = "Sin pieza";
   } else if (colorNormal === "DESCONOCIDO") {
     colorSub.textContent = "Color no reconocido";
+    if (qualityState) qualityState.textContent = "Lectura sin clasificar";
   } else {
     colorSub.textContent = "Color detectado por el sensor";
+    if (qualityState) qualityState.textContent = "Color válido";
   }
 }
 
@@ -155,6 +171,9 @@ function actualizarProgreso(total) {
 
   if (total >= META_PIEZAS) {
     setStatus("Meta de 30 piezas completada", "ok");
+    if (productionMode) productionMode.textContent = "Meta completa";
+  } else {
+    if (productionMode) productionMode.textContent = "Automático";
   }
 }
 
@@ -183,19 +202,29 @@ function actualizarEstado(data) {
   if (
     estado.toUpperCase().includes("PARO") ||
     estado.toUpperCase().includes("ERROR") ||
-    estado.toUpperCase().includes("EMERGENCIA")
+    estado.toUpperCase().includes("EMERGENCIA") ||
+    estado.toUpperCase().includes("NO CONECTADO")
   ) {
     tipoEstado = "danger";
   }
 
   if (
     estado.toUpperCase().includes("ESPERANDO") ||
-    estado.toUpperCase().includes("MOVIENDO")
+    estado.toUpperCase().includes("MOVIENDO") ||
+    estado.toUpperCase().includes("DETECTANDO")
   ) {
     tipoEstado = "warning";
   }
 
   setStatus(estado, tipoEstado);
+
+  if (connectionState) {
+    if (estado.toUpperCase().includes("NO CONECTADO") || estado.toUpperCase().includes("SIN CONEXION")) {
+      connectionState.textContent = "Sin conexión";
+    } else {
+      connectionState.textContent = "Conectado";
+    }
+  }
 
   actualizarColor(color);
   actualizarContadores(data.contadores);
@@ -227,9 +256,11 @@ async function cargarEstado() {
       actualizarEstado(data);
     } else {
       setStatus(data.error || "Error al leer el sistema", "danger");
+      if (connectionState) connectionState.textContent = "Error";
     }
   } catch (e) {
-    setStatus("Sin conexión con el servidor", "danger");
+    setStatus("Sin conexión con servidor TCP", "danger");
+    if (connectionState) connectionState.textContent = "Sin conexión";
   }
 }
 
