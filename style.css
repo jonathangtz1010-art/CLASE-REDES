@@ -1,759 +1,888 @@
-:root {
-  --bg: #050913;
-  --bg2: #091224;
-  --panel: rgba(15, 24, 40, 0.86);
-  --panel-strong: rgba(18, 29, 48, 0.95);
-  --panel-soft: rgba(255,255,255,.04);
-  --line: rgba(255,255,255,.10);
-  --line-strong: rgba(255,255,255,.16);
-
-  --text: #eef4ff;
-  --muted: #9eb0d0;
-  --muted2: #7f92b4;
-
-  --cyan: #33d2ff;
-  --blue: #4a7dff;
-  --green: #35d48f;
-  --yellow: #ffd45e;
-  --red: #ff4d61;
-  --blackc: #0f1728;
-
-  --shadow-xl: 0 30px 80px rgba(0,0,0,.45);
-  --shadow-lg: 0 18px 40px rgba(0,0,0,.32);
-  --shadow-md: 0 10px 28px rgba(0,0,0,.24);
-
-  --radius-xl: 28px;
-  --radius-lg: 20px;
-  --radius-md: 16px;
-  --radius-sm: 12px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  min-height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(circle at 12% 10%, rgba(51,210,255,.16), transparent 28%),
-    radial-gradient(circle at 88% 14%, rgba(53,212,143,.14), transparent 30%),
-    radial-gradient(circle at 50% 90%, rgba(74,125,255,.14), transparent 34%),
-    linear-gradient(135deg, #02050c 0%, var(--bg) 35%, var(--bg2) 100%);
-  padding: 18px;
-  position: relative;
-  overflow-x: hidden;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,.15));
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  width: 520px;
-  height: 520px;
-  border-radius: 50%;
-  right: -180px;
-  top: -160px;
-  background: radial-gradient(circle, rgba(51,210,255,.08), transparent 70%);
-  pointer-events: none;
-}
-
-.card {
-  width: min(1380px, 100%);
-  min-height: calc(100vh - 36px);
-  margin: auto;
-  padding: 22px;
-  border-radius: var(--radius-xl);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
-    var(--panel);
-  border: 1px solid rgba(255,255,255,.08);
-  box-shadow: var(--shadow-xl);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  position: relative;
-  overflow: hidden;
-}
-
-.card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(120deg, rgba(255,255,255,.05), transparent 22%, transparent 78%, rgba(255,255,255,.04));
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,.2));
-}
-
-.top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 18px;
-  margin-bottom: 18px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--line);
-}
-
-h1 {
-  margin: 0;
-  font-size: clamp(22px, 2.2vw, 32px);
-  font-weight: 800;
-  letter-spacing: .4px;
-  color: #f7fbff;
-  text-shadow: 0 2px 12px rgba(0,0,0,.24);
-}
-
-h2 {
-  margin: 0 0 14px;
-  font-size: 16px;
-  font-weight: 800;
-  color: #f0f6ff;
-  letter-spacing: .25px;
-}
-
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--line-strong);
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 700;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-}
-
-.status::before {
-  content: "";
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #98a8c6;
-  box-shadow: 0 0 10px rgba(255,255,255,.25);
-}
-
-.status.ok {
-  color: #d9fff0;
-  border-color: rgba(53,212,143,.35);
-  background: rgba(53,212,143,.12);
-}
-
-.status.ok::before {
-  background: var(--green);
-  box-shadow: 0 0 16px rgba(53,212,143,.75);
-}
-
-.status.warning {
-  color: #fff1c6;
-  border-color: rgba(255,212,94,.35);
-  background: rgba(255,212,94,.12);
-}
-
-.status.warning::before {
-  background: var(--yellow);
-  box-shadow: 0 0 16px rgba(255,212,94,.7);
-}
-
-.status.danger {
-  color: #ffd6dc;
-  border-color: rgba(255,77,97,.4);
-  background: rgba(255,77,97,.12);
-}
-
-.status.danger::before {
-  background: var(--red);
-  box-shadow: 0 0 18px rgba(255,77,97,.8);
-}
-
-.dashboard {
-  display: grid;
-  grid-template-columns: 1.35fr .9fr;
-  gap: 18px;
-}
-
-.panel {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
-    var(--panel-strong);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  overflow: hidden;
-}
-
-.panel::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
-}
-
-.mainColor {
-  min-height: 270px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  border-radius: 20px;
-  border: 1px solid var(--line);
-  background:
-    radial-gradient(circle at 50% 25%, rgba(255,255,255,.04), transparent 44%),
-    linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.015));
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
-}
-
-.colorCircle {
-  width: 148px;
-  height: 148px;
-  border-radius: 50%;
-  margin: 0 auto 16px;
-  background: linear-gradient(180deg, #7f8ea8, #58677f);
-  border: 6px solid rgba(255,255,255,.18);
-  box-shadow:
-    0 0 0 10px rgba(255,255,255,.02),
-    0 0 40px rgba(255,255,255,.10),
-    inset 0 12px 24px rgba(255,255,255,.15),
-    inset 0 -10px 18px rgba(0,0,0,.25);
-  position: relative;
-}
-
-.colorCircle::after {
-  content: "";
-  position: absolute;
-  width: 52%;
-  height: 26%;
-  top: 15%;
-  left: 24%;
-  border-radius: 50%;
-  background: rgba(255,255,255,.18);
-  filter: blur(8px);
-}
-
-.colorCircle.red {
-  background: linear-gradient(180deg, #ff6b7c, #d61f38);
-  box-shadow:
-    0 0 0 10px rgba(255,77,97,.05),
-    0 0 46px rgba(255,77,97,.35),
-    inset 0 12px 24px rgba(255,255,255,.18),
-    inset 0 -10px 18px rgba(0,0,0,.28);
-}
-
-.colorCircle.green {
-  background: linear-gradient(180deg, #63f0b3, #1ea86d);
-  box-shadow:
-    0 0 0 10px rgba(53,212,143,.05),
-    0 0 46px rgba(53,212,143,.32),
-    inset 0 12px 24px rgba(255,255,255,.18),
-    inset 0 -10px 18px rgba(0,0,0,.28);
-}
-
-.colorCircle.blue {
-  background: linear-gradient(180deg, #7aa6ff, #2b65e8);
-  box-shadow:
-    0 0 0 10px rgba(74,125,255,.05),
-    0 0 46px rgba(74,125,255,.34),
-    inset 0 12px 24px rgba(255,255,255,.18),
-    inset 0 -10px 18px rgba(0,0,0,.28);
-}
-
-.colorCircle.black {
-  background: linear-gradient(180deg, #0a0d12, #000000);
-  box-shadow:
-    0 0 0 10px rgba(255,255,255,.02),
-    0 0 34px rgba(255,255,255,.09),
-    inset 0 12px 24px rgba(255,255,255,.08),
-    inset 0 -10px 18px rgba(0,0,0,.5);
-}
-
-.colorName {
-  font-size: clamp(26px, 2vw, 38px);
-  font-weight: 900;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  text-shadow: 0 4px 16px rgba(0,0,0,.25);
-}
-
-.colorSub {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 15px;
-}
-
-.progressBox {
-  margin-top: 18px;
-}
-
-.progressHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  color: var(--muted);
-  font-size: 15px;
-}
-
-.progressHeader strong {
-  color: #dce9ff;
-  font-size: 20px;
-  font-weight: 800;
-}
-
-.progressBar {
-  position: relative;
-  width: 100%;
-  height: 28px;
-  border-radius: 999px;
-  overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
-  border: 1px solid var(--line);
-  box-shadow:
-    inset 0 4px 10px rgba(0,0,0,.24),
-    0 4px 12px rgba(0,0,0,.15);
-}
-
-.progressFill {
-  position: relative;
-  height: 100%;
-  width: 0%;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, #1de4ff 0%, #2dcf9d 50%, #5e92ff 100%);
-  box-shadow:
-    0 0 18px rgba(51,210,255,.35),
-    0 0 30px rgba(74,125,255,.22);
-  transition: width .45s ease;
-}
-
-.progressFill::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(120deg, transparent 0%, rgba(255,255,255,.28) 40%, transparent 80%);
-  animation: shine 2.6s linear infinite;
-}
-
-@keyframes shine {
-  0% { transform: translateX(-120%); }
-  100% { transform: translateX(220%); }
-}
-
-.counterGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.counter {
-  position: relative;
-  text-align: center;
-  border-radius: 18px;
-  padding: 16px 12px 14px;
-  border: 1px solid var(--line);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
-  box-shadow: var(--shadow-md);
-  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
-}
-
-.counter:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255,255,255,.20);
-}
-
-.counter .dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin: 0 auto 10px;
-  border: 2px solid rgba(255,255,255,.40);
-  box-shadow: 0 0 16px rgba(255,255,255,.08);
-}
-
-.counter.red .dot {
-  background: var(--red);
-  box-shadow: 0 0 16px rgba(255,77,97,.55);
-}
-
-.counter.green .dot {
-  background: var(--green);
-  box-shadow: 0 0 16px rgba(53,212,143,.55);
-}
-
-.counter.blue .dot {
-  background: var(--blue);
-  box-shadow: 0 0 16px rgba(74,125,255,.55);
-}
-
-.counter.black .dot {
-  background: #000;
-  box-shadow: 0 0 16px rgba(255,255,255,.12);
-}
-
-.counter span {
-  display: block;
-  font-size: 14px;
-  color: #b9cae6;
-}
-
-.counter strong {
-  display: block;
-  margin-top: 4px;
-  font-size: 46px;
-  line-height: 1;
-  font-weight: 900;
-  color: #f7fbff;
-}
-
-.totalBox {
-  margin-top: 14px;
-  padding: 16px;
-  border-radius: 18px;
-  text-align: center;
-  border: 1px solid rgba(255,212,94,.35);
-  background:
-    linear-gradient(180deg, rgba(255,212,94,.10), rgba(255,212,94,.06));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
-}
-
-.totalBox span {
-  display: block;
-  font-size: 14px;
-  color: #d7d0b0;
-  margin-bottom: 6px;
-}
-
-.totalBox strong {
-  display: block;
-  font-size: 58px;
-  line-height: 1;
-  font-weight: 900;
-  color: var(--yellow);
-  text-shadow: 0 0 22px rgba(255,212,94,.22);
-}
-
-.dataGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.dataItem {
-  border-radius: 16px;
-  padding: 14px;
-  border: 1px solid var(--line);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012));
-  box-shadow: var(--shadow-md);
-  min-height: 82px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.dataItem span {
-  font-size: 14px;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-
-.dataItem strong {
-  font-size: 18px;
-  font-weight: 900;
-  color: #f6fbff;
-  letter-spacing: .3px;
-}
-
-.controls {
-  display: grid;
-  gap: 12px;
-}
-
-.controls .row {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 12px;
-  align-items: center;
-  margin: 8px 0;
-}
-
-.controls label {
-  color: var(--muted);
-  font-size: 14px;
-}
-
-input[type="range"] {
-  width: 100%;
-}
-
-.row2 {
-  grid-template-columns: 120px 1fr 1fr 1fr;
-}
-
-input[type="number"],
-input[type="text"],
-input[type="password"] {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid var(--line);
-  outline: none;
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  font-size: 15px;
-  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
-}
-
-input[type="number"]:focus,
-input[type="text"]:focus,
-input[type="password"]:focus {
-  border-color: rgba(51,210,255,.45);
-  box-shadow: 0 0 0 4px rgba(51,210,255,.10);
-  background: rgba(255,255,255,.08);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 52px;
-  padding: 12px 16px;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
-  color: var(--text);
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: .2px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: transform .14s ease, box-shadow .18s ease, border-color .18s ease, filter .18s ease;
-  box-shadow: var(--shadow-md);
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255,255,255,.20);
-  filter: brightness(1.04);
-}
-
-.btn:active {
-  transform: translateY(1px) scale(.995);
-}
-
-.btn.start {
-  background: linear-gradient(180deg, #2ee09c, #15945e);
-  border-color: rgba(53,212,143,.45);
-  color: #f6fffb;
-  box-shadow: 0 12px 24px rgba(53,212,143,.22);
-}
-
-.btn.reset {
-  background: linear-gradient(180deg, #5ea4ff, #295fe2);
-  border-color: rgba(74,125,255,.45);
-  color: #f7fbff;
-  box-shadow: 0 12px 24px rgba(74,125,255,.22);
-}
-
-.btn.stop {
-  background: linear-gradient(180deg, #ff7a89, #d92b40);
-  border-color: rgba(255,77,97,.42);
-  color: #fff5f6;
-  box-shadow: 0 12px 24px rgba(255,77,97,.22);
-}
-
-.btn.emergency {
-  min-height: 118px;
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: .7px;
-  border-radius: 18px;
-  color: white;
-  border: 1px solid rgba(255,255,255,.22);
-  background:
-    linear-gradient(180deg, #ff364d 0%, #e00023 60%, #b10019 100%);
-  box-shadow:
-    0 22px 44px rgba(255,0,35,.22),
-    inset 0 2px 0 rgba(255,255,255,.22);
-  position: relative;
-  overflow: hidden;
-}
-
-.btn.emergency::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.20) 45%, transparent 85%);
-  transform: translateX(-120%);
-  animation: emergencyShine 3s linear infinite;
-}
-
-@keyframes emergencyShine {
-  0% { transform: translateX(-120%); }
-  100% { transform: translateX(180%); }
-}
-
-.buttonGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.logBox {
-  height: 190px;
-  overflow: auto;
-  padding: 14px;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-  background:
-    linear-gradient(180deg, rgba(5,10,18,.95), rgba(8,14,24,.92));
-  color: #d8e7ff;
-  font-family: "Consolas", "Courier New", monospace;
-  font-size: 13px;
-  line-height: 1.45;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
-}
-
-.logBox p {
-  margin: 0 0 8px;
-  word-break: break-word;
-}
-
-.hint {
-  margin: 8px 0 0;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-.videoBox {
-  margin-top: 14px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 12px;
-  background: rgba(255,255,255,.04);
-}
-
-.videoBox video {
-  width: 100%;
-  max-height: 280px;
-  border-radius: 12px;
-  display: block;
-}
-
-.videoHint {
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.loginBox {
-  width: min(480px, 100%);
-  min-height: auto;
-}
-
-a.btn {
-  text-decoration: none;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255,255,255,.04);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(125,145,180,.45);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(160,182,220,.55);
-}
-
-@media (max-width: 1080px) {
-  .dashboard {
-    grid-template-columns: 1fr;
-  }
-
-  .counterGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .top {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-@media (max-width: 640px) {
-  body {
-    padding: 10px;
-  }
-
-  .card {
-    padding: 14px;
-    border-radius: 18px;
-  }
-
-  .counterGrid,
-  .buttonGrid,
-  .dataGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .controls .row,
-  .row2 {
-    grid-template-columns: 1fr;
-  }
-
-  .colorCircle {
-    width: 118px;
-    height: 118px;
-  }
-
-  .colorName {
-    font-size: 28px;
-  }
-
-  .counter strong {
-    font-size: 38px;
-  }
-
-  .totalBox strong {
-    font-size: 46px;
-  }
-
-  .btn.emergency {
-    min-height: 88px;
-    font-size: 18px;
-  }
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operador · Mando central</title>
+  <style>
+    /* ============================================================
+       ROOT – Variables (estilo cyber / glass)
+       ============================================================ */
+    :root {
+      --bg: #050913;
+      --bg2: #091224;
+      --panel: rgba(15, 24, 40, 0.86);
+      --panel-strong: rgba(18, 29, 48, 0.95);
+      --panel-soft: rgba(255,255,255,.04);
+      --line: rgba(255,255,255,.10);
+      --line-strong: rgba(255,255,255,.16);
+
+      --text: #eef4ff;
+      --muted: #9eb0d0;
+      --muted2: #7f92b4;
+
+      --cyan: #33d2ff;
+      --blue: #4a7dff;
+      --green: #35d48f;
+      --yellow: #ffd45e;
+      --red: #ff4d61;
+      --blackc: #0f1728;
+
+      --shadow-xl: 0 30px 80px rgba(0,0,0,.45);
+      --shadow-lg: 0 18px 40px rgba(0,0,0,.32);
+      --shadow-md: 0 10px 28px rgba(0,0,0,.24);
+
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 10%, rgba(51,210,255,.16), transparent 28%),
+        radial-gradient(circle at 88% 14%, rgba(53,212,143,.14), transparent 30%),
+        radial-gradient(circle at 50% 90%, rgba(74,125,255,.14), transparent 34%),
+        linear-gradient(135deg, #02050c 0%, var(--bg) 35%, var(--bg2) 100%);
+      padding: 18px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,.15));
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      right: -180px;
+      top: -160px;
+      background: radial-gradient(circle, rgba(51,210,255,.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       CARD principal – vidrio metropolitano
+       ============================================================ */
+    .card {
+      width: min(1380px, 100%);
+      min-height: calc(100vh - 36px);
+      margin: auto;
+      padding: 22px;
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        var(--panel);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.05), transparent 22%, transparent 78%, rgba(255,255,255,.04));
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,.2));
+    }
+
+    /* ============================================================
+       TOP BAR – estado + título
+       ============================================================ */
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(22px, 2.2vw, 32px);
+      font-weight: 800;
+      letter-spacing: .4px;
+      color: #f7fbff;
+      text-shadow: 0 2px 12px rgba(0,0,0,.24);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    h1 small {
+      font-size: 0.55em;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.2px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      white-space: nowrap;
+    }
+
+    .status::before {
+      content: "";
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #98a8c6;
+      box-shadow: 0 0 10px rgba(255,255,255,.25);
+    }
+
+    .status.ok {
+      color: #d9fff0;
+      border-color: rgba(53,212,143,.35);
+      background: rgba(53,212,143,.12);
+    }
+    .status.ok::before {
+      background: var(--green);
+      box-shadow: 0 0 16px rgba(53,212,143,.75);
+    }
+
+    .status.warning {
+      color: #fff1c6;
+      border-color: rgba(255,212,94,.35);
+      background: rgba(255,212,94,.12);
+    }
+    .status.warning::before {
+      background: var(--yellow);
+      box-shadow: 0 0 16px rgba(255,212,94,.7);
+    }
+
+    .status.danger {
+      color: #ffd6dc;
+      border-color: rgba(255,77,97,.4);
+      background: rgba(255,77,97,.12);
+    }
+    .status.danger::before {
+      background: var(--red);
+      box-shadow: 0 0 18px rgba(255,77,97,.8);
+    }
+
+    /* ============================================================
+       DASHBOARD – columnas
+       ============================================================ */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1.35fr .9fr;
+      gap: 18px;
+    }
+
+    .panel {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        var(--panel-strong);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+    }
+
+    /* ============================================================
+       COLOR PRINCIPAL – círculo y nombre
+       ============================================================ */
+    .mainColor {
+      min-height: 270px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 25%, rgba(255,255,255,.04), transparent 44%),
+        linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,.015));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+
+    .colorCircle {
+      width: 148px;
+      height: 148px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      background: linear-gradient(180deg, #7f8ea8, #58677f);
+      border: 6px solid rgba(255,255,255,.18);
+      box-shadow:
+        0 0 0 10px rgba(255,255,255,.02),
+        0 0 40px rgba(255,255,255,.10),
+        inset 0 12px 24px rgba(255,255,255,.15),
+        inset 0 -10px 18px rgba(0,0,0,.25);
+      position: relative;
+    }
+
+    .colorCircle::after {
+      content: "";
+      position: absolute;
+      width: 52%;
+      height: 26%;
+      top: 15%;
+      left: 24%;
+      border-radius: 50%;
+      background: rgba(255,255,255,.18);
+      filter: blur(8px);
+    }
+
+    .colorCircle.red {
+      background: linear-gradient(180deg, #ff6b7c, #d61f38);
+      box-shadow: 0 0 0 10px rgba(255,77,97,.05), 0 0 46px rgba(255,77,97,.35), inset 0 12px 24px rgba(255,255,255,.18), inset 0 -10px 18px rgba(0,0,0,.28);
+    }
+    .colorCircle.green {
+      background: linear-gradient(180deg, #63f0b3, #1ea86d);
+      box-shadow: 0 0 0 10px rgba(53,212,143,.05), 0 0 46px rgba(53,212,143,.32), inset 0 12px 24px rgba(255,255,255,.18), inset 0 -10px 18px rgba(0,0,0,.28);
+    }
+    .colorCircle.blue {
+      background: linear-gradient(180deg, #7aa6ff, #2b65e8);
+      box-shadow: 0 0 0 10px rgba(74,125,255,.05), 0 0 46px rgba(74,125,255,.34), inset 0 12px 24px rgba(255,255,255,.18), inset 0 -10px 18px rgba(0,0,0,.28);
+    }
+    .colorCircle.black {
+      background: linear-gradient(180deg, #0a0d12, #000000);
+      box-shadow: 0 0 0 10px rgba(255,255,255,.02), 0 0 34px rgba(255,255,255,.09), inset 0 12px 24px rgba(255,255,255,.08), inset 0 -10px 18px rgba(0,0,0,.5);
+    }
+
+    .colorName {
+      font-size: clamp(26px, 2vw, 38px);
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 4px 16px rgba(0,0,0,.25);
+    }
+    .colorSub {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* ============================================================
+       PROGRESS
+       ============================================================ */
+    .progressBox { margin-top: 18px; }
+    .progressHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .progressHeader strong {
+      color: #dce9ff;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .progressBar {
+      position: relative;
+      width: 100%;
+      height: 28px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+      border: 1px solid var(--line);
+      box-shadow: inset 0 4px 10px rgba(0,0,0,.24), 0 4px 12px rgba(0,0,0,.15);
+    }
+    .progressFill {
+      position: relative;
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #1de4ff 0%, #2dcf9d 50%, #5e92ff 100%);
+      box-shadow: 0 0 18px rgba(51,210,255,.35), 0 0 30px rgba(74,125,255,.22);
+      transition: width .45s ease;
+    }
+    .progressFill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.28) 40%, transparent 80%);
+      animation: shine 2.6s linear infinite;
+    }
+    @keyframes shine {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(220%); }
+    }
+
+    /* ============================================================
+       COUNTERS
+       ============================================================ */
+    .counterGrid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .counter {
+      text-align: center;
+      border-radius: 18px;
+      padding: 16px 12px 14px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      box-shadow: var(--shadow-md);
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .counter:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,.20);
+    }
+    .counter .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      border: 2px solid rgba(255,255,255,.40);
+      box-shadow: 0 0 16px rgba(255,255,255,.08);
+    }
+    .counter.red .dot   { background: var(--red);   box-shadow: 0 0 16px rgba(255,77,97,.55); }
+    .counter.green .dot { background: var(--green); box-shadow: 0 0 16px rgba(53,212,143,.55); }
+    .counter.blue .dot  { background: var(--blue);  box-shadow: 0 0 16px rgba(74,125,255,.55); }
+    .counter.black .dot { background: #000;         box-shadow: 0 0 16px rgba(255,255,255,.12); }
+    .counter span {
+      display: block;
+      font-size: 14px;
+      color: #b9cae6;
+    }
+    .counter strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 46px;
+      line-height: 1;
+      font-weight: 900;
+      color: #f7fbff;
+    }
+
+    /* total */
+    .totalBox {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 18px;
+      text-align: center;
+      border: 1px solid rgba(255,212,94,.35);
+      background: linear-gradient(180deg, rgba(255,212,94,.10), rgba(255,212,94,.06));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .totalBox span {
+      display: block;
+      font-size: 14px;
+      color: #d7d0b0;
+      margin-bottom: 6px;
+    }
+    .totalBox strong {
+      display: block;
+      font-size: 58px;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--yellow);
+      text-shadow: 0 0 22px rgba(255,212,94,.22);
+    }
+
+    /* ============================================================
+       DATA GRID (información rápida)
+       ============================================================ */
+    .dataGrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .dataItem {
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012));
+      box-shadow: var(--shadow-md);
+      min-height: 82px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .dataItem span {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .dataItem strong {
+      font-size: 18px;
+      font-weight: 900;
+      color: #f6fbff;
+      letter-spacing: .3px;
+    }
+
+    /* ============================================================
+       CONTROLES – botones, inputs, filas
+       ============================================================ */
+    .controls {
+      display: grid;
+      gap: 12px;
+    }
+    .controls .row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin: 8px 0;
+    }
+    .controls label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    input[type="range"] { width: 100%; }
+    .row2 {
+      grid-template-columns: 120px 1fr 1fr 1fr;
+    }
+    input[type="number"],
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      outline: none;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-size: 15px;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: rgba(51,210,255,.45);
+      box-shadow: 0 0 0 4px rgba(51,210,255,.10);
+      background: rgba(255,255,255,.08);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      cursor: pointer;
+      transition: transform .14s ease, box-shadow .18s ease, border-color .18s ease, filter .18s ease;
+      box-shadow: var(--shadow-md);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.20);
+      filter: brightness(1.04);
+    }
+    .btn:active {
+      transform: translateY(1px) scale(.995);
+    }
+
+    .btn.start {
+      background: linear-gradient(180deg, #2ee09c, #15945e);
+      border-color: rgba(53,212,143,.45);
+      color: #f6fffb;
+      box-shadow: 0 12px 24px rgba(53,212,143,.22);
+    }
+    .btn.reset {
+      background: linear-gradient(180deg, #5ea4ff, #295fe2);
+      border-color: rgba(74,125,255,.45);
+      color: #f7fbff;
+      box-shadow: 0 12px 24px rgba(74,125,255,.22);
+    }
+    .btn.stop {
+      background: linear-gradient(180deg, #ff7a89, #d92b40);
+      border-color: rgba(255,77,97,.42);
+      color: #fff5f6;
+      box-shadow: 0 12px 24px rgba(255,77,97,.22);
+    }
+    .btn.emergency {
+      min-height: 118px;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .7px;
+      border-radius: 18px;
+      color: white;
+      border: 1px solid rgba(255,255,255,.22);
+      background: linear-gradient(180deg, #ff364d 0%, #e00023 60%, #b10019 100%);
+      box-shadow: 0 22px 44px rgba(255,0,35,.22), inset 0 2px 0 rgba(255,255,255,.22);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn.emergency::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.20) 45%, transparent 85%);
+      transform: translateX(-120%);
+      animation: emergencyShine 3s linear infinite;
+    }
+    @keyframes emergencyShine {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(180%); }
+    }
+
+    .buttonGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* ============================================================
+       LOG + video
+       ============================================================ */
+    .logBox {
+      height: 190px;
+      overflow: auto;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(5,10,18,.95), rgba(8,14,24,.92));
+      color: #d8e7ff;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+    .logBox p { margin: 0 0 8px; word-break: break-word; }
+
+    .videoBox {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,.04);
+    }
+    .videoBox video {
+      width: 100%;
+      max-height: 280px;
+      border-radius: 12px;
+      display: block;
+    }
+    .videoHint {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1080px) {
+      .dashboard { grid-template-columns: 1fr; }
+      .counterGrid { grid-template-columns: repeat(2, 1fr); }
+      .top { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 640px) {
+      body { padding: 10px; }
+      .card { padding: 14px; border-radius: 18px; }
+      .counterGrid, .buttonGrid, .dataGrid { grid-template-columns: 1fr; }
+      .controls .row, .row2 { grid-template-columns: 1fr; }
+      .colorCircle { width: 118px; height: 118px; }
+      .colorName { font-size: 28px; }
+      .counter strong { font-size: 38px; }
+      .totalBox strong { font-size: 46px; }
+      .btn.emergency { min-height: 88px; font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card" id="app">
+
+  <!-- ==================== TOP ==================== -->
+  <div class="top">
+    <h1>
+      ⚡ MANDO CENTRAL
+      <small>operador · alta disponibilidad</small>
+    </h1>
+    <div class="status ok" id="statusBadge">
+      <span id="statusText">Sistema operativo</span>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <div class="dashboard">
+
+    <!-- COLUMNA IZQUIERDA (principal) -->
+    <div class="panel" style="display: flex; flex-direction: column; gap: 14px;">
+
+      <!-- Color principal + indicador -->
+      <div class="mainColor">
+        <div>
+          <div class="colorCircle green" id="mainColorCircle"></div>
+          <div class="colorName" id="mainColorName">VERDE</div>
+          <div class="colorSub" id="mainColorSub">estado · nominal</div>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="progressBox">
+        <div class="progressHeader">
+          <span>Carga operativa</span>
+          <strong id="progressLabel">64%</strong>
+        </div>
+        <div class="progressBar">
+          <div class="progressFill" id="progressFill" style="width:64%;"></div>
+        </div>
+      </div>
+
+      <!-- Counter Grid 4 elementos -->
+      <div class="counterGrid" id="counterGrid">
+        <div class="counter red">
+          <div class="dot"></div>
+          <span>Críticos</span>
+          <strong id="counterRed">2</strong>
+        </div>
+        <div class="counter green">
+          <div class="dot"></div>
+          <span>Verdes</span>
+          <strong id="counterGreen">8</strong>
+        </div>
+        <div class="counter blue">
+          <div class="dot"></div>
+          <span>Azules</span>
+          <strong id="counterBlue">5</strong>
+        </div>
+        <div class="counter black">
+          <div class="dot"></div>
+          <span>Apagados</span>
+          <strong id="counterBlack">1</strong>
+        </div>
+      </div>
+
+      <!-- Total -->
+      <div class="totalBox">
+        <span>UNIDADES TOTALES</span>
+        <strong id="totalUnits">16</strong>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA (controles + info) -->
+    <div class="panel" style="display: flex; flex-direction: column; gap: 14px;">
+
+      <!-- Data grid rápido -->
+      <div class="dataGrid">
+        <div class="dataItem"><span>📡 Señal</span><strong id="signalValue">-48 dBm</strong></div>
+        <div class="dataItem"><span>🕒 Última acción</span><strong id="lastAction">hace 12s</strong></div>
+        <div class="dataItem"><span>🧠 CPU</span><strong id="cpuValue">23%</strong></div>
+        <div class="dataItem"><span>💾 Memoria</span><strong id="memValue">6.2 GB</strong></div>
+      </div>
+
+      <!-- Controles principales -->
+      <div class="controls">
+        <div class="row">
+          <label for="sliderIntensity">Intensidad</label>
+          <input type="range" id="sliderIntensity" min="0" max="100" value="64">
+        </div>
+        <div class="row row2">
+          <label>Umbral</label>
+          <input type="number" id="umbralInput" value="75" step="1" min="0" max="100">
+          <input type="text" id="etiquetaInput" placeholder="Etiqueta" value="Operativo">
+          <button class="btn reset" id="applyBtn" style="min-height:44px;">Aplicar</button>
+        </div>
+      </div>
+
+      <!-- Botones principales -->
+      <div class="buttonGrid">
+        <button class="btn start" id="startBtn">▶ Iniciar</button>
+        <button class="btn stop" id="stopBtn">■ Detener</button>
+        <button class="btn reset" id="resetBtn">⟲ Reset</button>
+        <button class="btn emergency" id="emergencyBtn">🚨 EMERGENCIA</button>
+      </div>
+
+      <!-- Log -->
+      <div class="logBox" id="logBox">
+        <p>🟢 Sistema listo · 10:32:14</p>
+        <p>📌 Conectado a servidor central</p>
+        <p>⏳ Esperando comandos...</p>
+      </div>
+
+      <!-- Video placeholder (estético) -->
+      <div class="videoBox">
+        <video autoplay muted loop playsinline>
+          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        </video>
+        <div class="videoHint">📹 Vista previa en vivo (simulación)</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    "use strict";
+
+    // ==========================
+    // REFERENCIAS DOM
+    // ==========================
+    const statusBadge = document.getElementById('statusBadge');
+    const statusText = document.getElementById('statusText');
+
+    const mainCircle = document.getElementById('mainColorCircle');
+    const mainName = document.getElementById('mainColorName');
+    const mainSub = document.getElementById('mainColorSub');
+
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+
+    const counterRed = document.getElementById('counterRed');
+    const counterGreen = document.getElementById('counterGreen');
+    const counterBlue = document.getElementById('counterBlue');
+    const counterBlack = document.getElementById('counterBlack');
+    const totalUnits = document.getElementById('totalUnits');
+
+    const signalValue = document.getElementById('signalValue');
+    const lastAction = document.getElementById('lastAction');
+    const cpuValue = document.getElementById('cpuValue');
+    const memValue = document.getElementById('memValue');
+
+    const sliderIntensity = document.getElementById('sliderIntensity');
+    const umbralInput = document.getElementById('umbralInput');
+    const etiquetaInput = document.getElementById('etiquetaInput');
+    const applyBtn = document.getElementById('applyBtn');
+
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const emergencyBtn = document.getElementById('emergencyBtn');
+
+    const logBox = document.getElementById('logBox');
+
+    // ==========================
+    // ESTADO SIMULADO
+    // ==========================
+    let state = {
+      progress: 64,
+      red: 2, green: 8, blue: 5, black: 1,
+      signal: -48,
+      cpu: 23,
+      mem: 6.2,
+      lastAction: 'hace 12s',
+      status: 'ok', // 'ok' | 'warning' | 'danger'
+      statusMsg: 'Sistema operativo',
+      color: 'green', // 'green' | 'red' | 'blue' | 'black'
+      colorName: 'VERDE',
+      colorSub: 'estado · nominal',
+      running: true,
+    };
+
+    // ==========================
+    // FUNCIONES DE ACTUALIZACIÓN UI
+    // ==========================
+    function updateUI() {
+      // status
+      statusBadge.className = 'status ' + state.status;
+      statusText.textContent = state.statusMsg;
+
+      // color principal
+      mainCircle.className = 'colorCircle ' + state.color;
+      mainName.textContent = state.colorName;
+      mainSub.textContent = state.colorSub;
+
+      // progress
+      const p = Math.min(100, Math.max(0, state.progress));
+      progressFill.style.width = p + '%';
+      progressLabel.textContent = p + '%';
+
+      // counters
+      counterRed.textContent = state.red;
+      counterGreen.textContent = state.green;
+      counterBlue.textContent = state.blue;
+      counterBlack.textContent = state.black;
+      const total = state.red + state.green + state.blue + state.black;
+      totalUnits.textContent = total;
+
+      // data items
+      signalValue.textContent = state.signal + ' dBm';
+      lastAction.textContent = state.lastAction;
+      cpuValue.textContent = state.cpu + '%';
+      memValue.textContent = state.mem.toFixed(1) + ' GB';
+
+      // slider sincronización (si no está en foco)
+      if (document.activeElement !== sliderIntensity) {
+        sliderIntensity.value = state.progress;
+      }
+    }
+
+    // ==========================
+    // LOG (con timestamp)
+    // ==========================
+    function addLog(msg, type = 'info') {
+      const time = new Date().toLocaleTimeString();
+      const icon = type === 'info' ? 'ℹ️' : type === 'ok' ? '✅' : type === 'warn' ? '⚠️' : '🚨';
+      const p = document.createElement('p');
+      p.textContent = `${icon} [${time}] ${msg}`;
+      logBox.appendChild(p);
+      logBox.scrollTop = logBox.scrollHeight;
+      if (logBox.children.length > 50) {
+        logBox.removeChild(logBox.children[0]);
+      }
+    }
+
+    // ==========================
+    // FUNCIONES DE ACCIÓN (simulación)
+    // ==========================
+    function applyChanges() {
+      const val = parseInt(umbralInput.value, 10);
+      if (!isNaN(val) && val >= 0 && val <= 100) {
+        state.progress = val;
+        addLog(`Umbral aplicado: ${val}% · etiqueta: "${etiquetaInput.value || '—'}"`, 'info');
+        updateUI();
+      } else {
+        addLog('⚠️ Umbral inválido (0-100)', 'warn');
+      }
+    }
+
+    function startSystem() {
+      state.running = true;
+     
