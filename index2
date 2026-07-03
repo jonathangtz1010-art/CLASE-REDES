@@ -16,6 +16,7 @@
         <h1>⚡ Clasificador · Núcleo</h1>
         <p>Sensor de color · motor con encoder · servo expulsor · paro de emergencia</p>
       </div>
+
       <div class="topRight">
         <div class="clockBox" id="liveClock">--:--:--</div>
         <div class="status" id="status">Cargando sistema...</div>
@@ -27,19 +28,34 @@
     <section class="kpiGrid">
       <div class="kpiCard">
         <div class="kpiIcon">📦</div>
-        <div><span>Piezas totales</span><strong id="totalCount">0</strong></div>
+        <div>
+          <span>Piezas totales</span>
+          <strong id="totalCount">0</strong>
+        </div>
       </div>
+
       <div class="kpiCard">
         <div class="kpiIcon">🎯</div>
-        <div><span>Meta producción</span><strong>30</strong></div>
+        <div>
+          <span>Meta producción</span>
+          <strong>30</strong>
+        </div>
       </div>
+
       <div class="kpiCard">
         <div class="kpiIcon">🧠</div>
-        <div><span>Modo trabajo</span><strong id="productionMode">Automático</strong></div>
+        <div>
+          <span>Modo trabajo</span>
+          <strong id="productionMode">Automático</strong>
+        </div>
       </div>
+
       <div class="kpiCard">
         <div class="kpiIcon">🔌</div>
-        <div><span>Conexión</span><strong id="connectionState">Servidor</strong></div>
+        <div>
+          <span>Conexión</span>
+          <strong id="connectionState">Servidor</strong>
+        </div>
       </div>
     </section>
 
@@ -55,6 +71,7 @@
             <h2>🎨 Color detectado</h2>
             <span id="qualityState" class="miniBadge">Lectura activa</span>
           </div>
+
           <div class="mainColor">
             <div>
               <div id="colorCircle" class="colorCircle"></div>
@@ -62,11 +79,13 @@
               <div id="colorSub" class="colorSub">Esperando lectura del sensor</div>
             </div>
           </div>
+
           <div class="progressBox">
             <div class="progressHeader">
               <span>Avance de producción</span>
               <strong id="progressText">0/30 piezas</strong>
             </div>
+
             <div class="progressBar">
               <div id="progressFill" class="progressFill" style="width:0%"></div>
             </div>
@@ -79,22 +98,26 @@
             <h2>📊 Contadores por color</h2>
             <span class="miniBadge">Conteo independiente</span>
           </div>
+
           <div class="counterGrid">
             <div class="counter red">
               <div class="counterIcon">🔴</div>
               <span>Rojo</span>
               <strong id="redCount">0</strong>
             </div>
+
             <div class="counter green">
               <div class="counterIcon">🟢</div>
               <span>Verde</span>
               <strong id="greenCount">0</strong>
             </div>
+
             <div class="counter blue">
               <div class="counterIcon">🔵</div>
               <span>Azul</span>
               <strong id="blueCount">0</strong>
             </div>
+
             <div class="counter black">
               <div class="counterIcon">⚫</div>
               <span>Negro</span>
@@ -109,16 +132,40 @@
             <h2>🔄 Flujo del proceso</h2>
             <span class="miniBadge">Secuencia automática</span>
           </div>
+
           <div class="processFlow">
-            <div class="step active"><div>👁️</div><span>Sensor lee color</span></div>
+            <div class="step active">
+              <div>👁️</div>
+              <span>Sensor lee color</span>
+            </div>
+
             <div class="arrow">➜</div>
-            <div class="step"><div>🧮</div><span>Clasificación</span></div>
+
+            <div class="step">
+              <div>🧮</div>
+              <span>Clasificación</span>
+            </div>
+
             <div class="arrow">➜</div>
-            <div class="step"><div>⚙️</div><span>Motor a setpoint</span></div>
+
+            <div class="step">
+              <div>⚙️</div>
+              <span>Motor a setpoint</span>
+            </div>
+
             <div class="arrow">➜</div>
-            <div class="step"><div>🦾</div><span>Servo expulsa</span></div>
+
+            <div class="step">
+              <div>🦾</div>
+              <span>Servo expulsa</span>
+            </div>
+
             <div class="arrow">➜</div>
-            <div class="step"><div>🏁</div><span>Regresa a cero</span></div>
+
+            <div class="step">
+              <div>🏁</div>
+              <span>Regresa a cero</span>
+            </div>
           </div>
         </section>
       </div>
@@ -132,14 +179,18 @@
             <h2>🕹️ Control del sistema</h2>
             <span class="miniBadge">Operador</span>
           </div>
+
           <div class="controls">
             <button id="btnStart" class="btn start">▶️ Iniciar sistema</button>
+
             <div class="buttonGrid">
               <button id="btnReset" class="btn reset">🔁 Reiniciar desde cero</button>
               <button id="btnClearCounters" class="btn">🧹 Limpiar contadores</button>
             </div>
+
             <button id="btnEmergency" class="btn emergency">⛔ PARO DE EMERGENCIA</button>
           </div>
+
           <p style="color:var(--text-muted); font-size:13px; margin-top:12px;">
             El paro detiene el motor. El reinicio regresa el sistema al centro y deja listo el proceso.
           </p>
@@ -151,27 +202,37 @@
             <h2>🧩 Datos técnicos</h2>
             <span class="miniBadge">Arduino / PID</span>
           </div>
-          <div class="dataGrid">
-            <div class="dataItem"><span>📍 Posición encoder</span><strong id="posicion">0</strong></div>
-            <div class="dataItem"><span>🎯 Setpoint</span><strong id="setpoint">0</strong></div>
-            <div class="dataItem"><span>⚡ PWM motor</span><strong id="pwm">0</strong></div>
-            <div class="dataItem"><span>⚙️ Estado motor</span><strong id="motorState">DETENIDO</strong></div>
-            <div class="dataItem"><span>🦾 Estado servo</span><strong id="servoState">REPOSO</strong></div>
-            <div class="dataItem"><span>🏁 Meta</span><strong>30 piezas</strong></div>
-          </div>
-        </section>
 
-        <!-- SETPOINTS / RUTAS -->
-        <section class="panel">
-          <div class="panelHeader">
-            <h2>🧪 Estado de colores</h2>
-            <span class="miniBadge">Setpoints</span>
-          </div>
-          <div class="colorRouteGrid">
-            <div class="route redRoute"><span>🔴 Rojo</span><strong>-900</strong></div>
-            <div class="route greenRoute"><span>🟢 Verde</span><strong>0</strong></div>
-            <div class="route blueRoute"><span>🔵 Azul</span><strong>900</strong></div>
-            <div class="route blackRoute"><span>⚫ Negro</span><strong>-900</strong></div>
+          <div class="dataGrid">
+            <div class="dataItem">
+              <span>📍 Posición encoder</span>
+              <strong id="posicion">0</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>🎯 Setpoint</span>
+              <strong id="setpoint">0</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>⚡ PWM motor</span>
+              <strong id="pwm">0</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>⚙️ Estado motor</span>
+              <strong id="motorState">DETENIDO</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>🦾 Estado servo</span>
+              <strong id="servoState">REPOSO</strong>
+            </div>
+
+            <div class="dataItem">
+              <span>🏁 Meta</span>
+              <strong>30 piezas</strong>
+            </div>
           </div>
         </section>
 
@@ -181,10 +242,12 @@
             <h2>📝 Registro del sistema</h2>
             <span class="miniBadge">Eventos</span>
           </div>
+
           <div id="logBox" class="logBox">
             <p>[Sistema] Esperando conexión...</p>
           </div>
         </section>
+
       </div>
     </div>
   </main>
